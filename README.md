@@ -1,0 +1,2 @@
+# strategeo
+stratego-like game
