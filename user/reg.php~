@@ -1,0 +1,93 @@
+<?php
+ini_set('display_errors', 1);
+
+//Check if authenticated
+session_start();
+if (isset($_SESSION['auth'])){
+   header("Location: welcome.php");
+   exit();
+} else {
+
+   #Require database connection file
+   require '../php_includes/db_connect.php';
+
+
+$success = False;
+$msg = "";
+
+
+#
+# Checks user creation form input
+# If valid will add user to database
+#
+if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['password_repeat'])){
+   $pw = strip_tags($_POST['password']);
+   $user = strip_tags($_POST['username']);
+   $ip = $_SERVER['REMOTE_ADDR'];
+   $id = "";
+   $stmt = $conn->prepare("SELECT * FROM USER where Username= ?");
+
+   $stmt -> bind_param("s", $name);           
+   $name = $user;
+   $stmt->execute();
+
+   $found = False;
+   while($stmt->fetch()){
+        $found = True;
+   }  
+
+   $stmt->close();
+
+   if ($pw != $_POST['password_repeat']){
+      $msg = "Passwords did not match";
+   } elseif (strlen($pw) < 12 ){
+      $msg = "Password must be at least 12 characters long";
+   } elseif (strlen($user) < 1 || strlen($user) > 64) {
+      $msg = "Username must be between 1 and 64 characters";
+   } elseif ($found == True) {
+      $msg = "User already exists";
+   } else {
+      if ($stmt = $conn->prepare("INSERT INTO USER (Username, Password, Salt) VALUES (?,?,?)")){
+         $stmt -> bind_param("sss", $user, $hashed, $s);
+         
+         $s = substr(base64_encode(mcrypt_create_iv(24, MCRYPT_DEV_URANDOM)), 0, 16);
+
+         $hashed = crypt($pw, '$6$'.$s.'$');
+
+         $stmt->execute();
+
+         $success = True;
+         $msg = "Account created";
+
+         $stmt->close();
+      } else {
+         printf("Prepared Statement Error: %s\n", $mysqli->error);
+      }
+      $id = $conn->insert_id;
+      if ($stmt = $conn->prepare("INSERT INTO AuthLogEntry (UserID, IP, EventType) VALUES ('$id','$ip','create')")){
+         $stmt->execute();
+         $stmt->close();
+      } else {
+         printf("Prepared Statement Error: %s\n", mysqli_error($conn));
+      }
+
+   }
+   $_POST = array();
+}
+
+$f = "<form id='newuserform' method='POST' action='#'>";
+$f .= "<input type='text' name='username' placeholder='Username'>";
+$f .= "<input type='text' name='password' placeholder='Password'>";
+$f .= "<input type='text' name='password_repeat' placeholder='Repeat Password'>";
+$f .= "<button type='submit'>Create account</button>";
+$f .= "</form>";
+print $f;
+print $msg;
+echo "<br><a href='index.php'>Home</a>";
+
+
+
+
+}
+
+?>
