@@ -1,6 +1,5 @@
 <?php
 ini_set('display_errors', 1);
-require '../php_includes/db_connect.php';
 
 //Check if authenticated
 session_start();
@@ -8,6 +7,7 @@ if (isset($_SESSION['auth']) == false){
    header("Location: login.php");
    exit();
 } else {
+   require '../php_includes/db_connect.php';
    $name = $_SESSION['auth'];
 
    #
@@ -69,13 +69,13 @@ if (isset($_SESSION['auth']) == false){
    $h .= "<h2>Your Current Games: $gameN / 3</h2>";
    $h .= "$gStr";
    if ($gameN < 4){
-      $h .= "<br><form action='../newgame/index.php' method='POST'>";
+      $h .= "<br><form action='../new_game/index.php' method='POST'>";
       $h .= "<input type='submit' value='Create A Game!' name='createGame'></form>";
    }
    $h .= "<h2>Open Games:</h2>";
    $h .= "$cStr";
    if ($gameN < 4){
-      $h .= "<br><form action='../joingame/index.php' method='POST'>";
+      $h .= "<br><form action='../join_game/index.php' method='POST'>";
       $h .= "<input type='submit' value='Join A Game!' name='joinGame'></form>";
    }
    $h .= "<form action='logout.php' method='POST'>";
