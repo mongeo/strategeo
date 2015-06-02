@@ -1,18 +1,15 @@
 <?php
-$path = $_SERVER['CONTEXT_DOCUMENT_ROOT'] . "/stratego/";
-
-//Create array from data file
-//for red game pieces
-
 #
 # Create an array of values for red pieces
 #
 $vals = "../data/vals";
 $reds = file($vals, FILE_IGNORE_NEW_LINES);
 
-//Build board table (b)
-//M = Map (aka (b)oard)
-$b = "<table id='board'>";//Use for init and store string in database
+#
+# Build board table (b)
+# M = Map (aka (b)oard)
+#
+$b = "<table id='board'>";
 $i = 1;
 while($i < 101){
         if($i % 10 == 1){
@@ -35,10 +32,10 @@ while($i < 101){
         }
 }
 $b .= "</table>";
-//End build board table
 
-//Red pool
-
+#
+# Red pool - Area that stores red peices for board placement
+#
 $rP = "<table id='rPool'>";
 $i = 0;
 while($i < 40){
@@ -58,8 +55,9 @@ $rP .= "</table>";
 
 //End red pool
 
-//Blue pool
-
+#
+# Blue pool - Area to store blue pieces for board placement
+#
 $bP = "<table id='bPool'>";
 $i = 0;
 while($i < 40){
@@ -77,37 +75,46 @@ while($i < 40){
 }
 $bP .= "</table>";
 
-//End blue pool
-
-//Create hidden form and append to h (f)
+# 
+# Create hidden form and append to h (f)
+#
 $f = "";
 for ($i = 1; $i < 102; $i++){
     $f .= "<input type='hidden' id='F" . $i . "' name='M" . $i . "' value=''>";
 }
-//End hidden form
 
-//Begin header table (h)
+#
+# Header - Displays welcome message and ready button 
+# for when user has placed all pieces on board
+#
 $h = "<div id='header'>";
 $h .= "<h1>Stratego</h1>";
-$h .= "<br><div id='headerText'> Welcome " . ucfirst($name) . "! Place your pieces on the board. Click ready when button appears <form id='readyForm' action='newgamepost.php' method='POST'>" . $f . "<div id='readyButton'></div></form></div></div>";
-//End header table
+$h .= "<br><div id='headerText'> Welcome " . ucfirst($name) . " !";
+$h .= " Place your pieces on the board. Click ready when button appears ";
+$h .= "<form id='readyForm' action='newgamepost.php' method='POST'>";
+$h /= "" . $f . "<div id='readyButton'></div></form></div></div>";
 
-//Build side bar
-
+#
+# Sidebar - Displays game information
+#
 $rSide = "<div id='rSide'>";
 
+#Displays selected piece
 $sImg = "<div id='sImg' class='square'>";
 $sImg .= "";
 $sImg .= "</div>";
 
+#Displays status message of selection
 $sMsg = "<div id='sMsg'>";
 $sMsg .= "Select your piece to move";
 $sMsg .= "</div>";
 
+#Displays current phase of the game
 $sPhase = "<div id='sPhase'>";
 $sPhase .= "<b>Phase:</b><br>Game creation";
 $sPhase .= "</div>";
 
+#Displays last move information
 $sLastMove = "<div id='sLastMove'>";
 $sLastMove .= "<b>Last move:</b><br>";
 $sLastMove .= "By Megan<br>";
@@ -115,54 +122,50 @@ $sLastMove .= "R41 -> R51<br>";
 $sLastMove .= "@ 2/5/84 2pm PST";
 $sLastMove .= "</div>";
 
+#Logs off user
 $sSignout = "<div id='sSignout'>";
-$sSignout .= "<a href='../user/signout.php'>Signout</a>";
+$sSignout .= "<a href='../user/logout.php'>Logout</a>";
 $sSignout .= "</div>";
 
-
+#Combines sidebar string
 $rSide .= $sImg . $sMsg . $sPhase . $sLastMove . $sSignout;
 $rSide .= "</div>";
-//
 
-//Demarcation lines
+
+#
+# Demarcation lines - spaces between pools and board
+#
 $rLine = "<div id='rLine'>Red Zone</div>";
 $bLine = "<div id='bLine'>Blue Zone</div>";
-//End demarcation
 
-
-//Build top html (htmlT)
+# 
+# Top html (htmlT) - Adds beginning html code
+#
 $htmlT = "<!DOCTYPE html><html lang='en'><head>";
 $htmlT .= "<link rel='stylesheet' type='text/css' href='../css/board.css'>";
 $htmlT .= "<script src='../js/jquery-1.11.2.js'></script>";
-$htmlT .= "<script src='../js/newgameboard.js'></script>";
+$htmlT .= "<script src='../js/new_game_board.js'></script>";
 $htmlT .= "</head>";
 $htmlT .= "<body>";
 $htmlT .= "<div id='container'>";
-//End top html
 
-//Build bottom html (htmlB)
+#
+# Bottom html - Adds ending html code
+#
 $htmlB = "</div>";
 $htmlB .= "</body>";
 $htmlB .= "</html>";
-//End bottom html
 
-/*String Key:
-$htmlT = top html
-$b = game board
-$f = hidden form appended to h
-$h = header
-$rSide = right side bar
-$htmlB = bottom html
-*/
 
-//Echo red board string
+#
+# Prints entire string for the board
+# 
 $rGBStr = $htmlT . $h . $b . $rP . $bP . $rSide . $rLine . $bLine . $htmlB;
 echo $rGBStr;
 
-//Get blue side board and board
-//To store in database and use for next player
-//$bGBStr = $b . $s2;
-//$_SESSION['bStr'] = $bGBStr;
+#
+# Board string - 
+#
 $boardStr = $b . $rSide . $rLine . $bSide . $bLine;
 $_SESSION['boardString'] = $boardStr;
 
