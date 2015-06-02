@@ -1,0 +1,6 @@
+<?php
+#$path = $_SERVER['CONTEXT_DOCUMENT_ROOT'] . "/stratego/";
+
+require "newgameboard.php";
+
+?>
