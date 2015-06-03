@@ -29,7 +29,7 @@ button {
     background-color: black;
     height: 500px;
     width: 500px;
-    left: 0px;
+    left: 250px;
     top: 375px;
 }
 
@@ -38,7 +38,7 @@ button {
     background-color: black;
     height: 200px;
     width: 500px;
-    left: 0px;
+    left: 250px;
     top: 150px;
 }
 
@@ -47,7 +47,7 @@ button {
     background-color: black;
     height: 200px;
     width: 500px;
-    left: 0px;
+    left: 250px;
     top: 900px;
 }
 
@@ -56,13 +56,13 @@ button {
     color: black;
     position: absolute;
     top: 0px;
-    left: 0px;
+    left: 250px;
     height: 150px;
     width: 500px;
 }
 
 #headerText {
-    font-size: 25px;
+    font-size: 20px;
     width: 500px;
     left: 0px;
 
@@ -79,8 +79,8 @@ button {
 
 #rSide {
     position: absolute;
-    top: 375px;
-    left: 525px;
+    top: 150px;
+    left: 775px;
     width: 250px;
     height: 1050px;
     background-color: white;
@@ -125,7 +125,7 @@ button {
     width: 200px;
     height: 25px;
     top: 375px;
-    left: 525px;
+    left: 775px;
     background-color: red;
     transform: rotate(90deg);
     transform-origin: left top 0;
@@ -140,7 +140,7 @@ button {
     width: 200px;
     height: 25px;
     top: 675px;
-    left: 525px;
+    left: 775px;
     background-color: blue;
     transform: rotate(90deg);
     transform-origin: left top 0;

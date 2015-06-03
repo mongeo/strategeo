@@ -1,9 +1,19 @@
 <?php
 #
+# Authenticate user
+#
+session_start();
+if (!isset($_SESSION['auth'])){
+   header("Location: ../user/login.php");
+}
+$name = $_SESSION['auth'];
+
+#
 # Create an array of values for red pieces
 #
 $vals = "../data/vals";
 $reds = file($vals, FILE_IGNORE_NEW_LINES);
+$blues = file($vals, FILE_IGNORE_NEW_LINES);
 
 #
 # Build board table (b)
@@ -53,8 +63,6 @@ while($i < 40){
 }
 $rP .= "</table>";
 
-//End red pool
-
 #
 # Blue pool - Area to store blue pieces for board placement
 #
@@ -77,9 +85,10 @@ $bP .= "</table>";
 
 # 
 # Create hidden form and append to h (f)
+# used to store placements in database
 #
 $f = "";
-for ($i = 1; $i < 102; $i++){
+for ($i = 1; $i < 101; $i++){
     $f .= "<input type='hidden' id='F" . $i . "' name='M" . $i . "' value=''>";
 }
 
@@ -89,10 +98,10 @@ for ($i = 1; $i < 102; $i++){
 #
 $h = "<div id='header'>";
 $h .= "<h1>Stratego</h1>";
-$h .= "<br><div id='headerText'> Welcome " . ucfirst($name) . " !";
-$h .= " Place your pieces on the board. Click ready when button appears ";
-$h .= "<form id='readyForm' action='newgamepost.php' method='POST'>";
-$h /= "" . $f . "<div id='readyButton'></div></form></div></div>";
+$h .= "<br><div id='headerText'> Welcome " . ucfirst($name) . "! ";
+$h .= "Place your pieces on the board. Click ready when button appears ";
+$h .= "<form id='readyForm' action='post_board.php' method='POST'>";
+$h .=  $f . "<div id='readyButton'></div></form></div></div>";
 
 #
 # Sidebar - Displays game information
@@ -116,10 +125,10 @@ $sPhase .= "</div>";
 
 #Displays last move information
 $sLastMove = "<div id='sLastMove'>";
-$sLastMove .= "<b>Last move:</b><br>";
-$sLastMove .= "By Megan<br>";
-$sLastMove .= "R41 -> R51<br>";
-$sLastMove .= "@ 2/5/84 2pm PST";
+$sLastMove .= "<b></b><br>";//Last Move:
+$sLastMove .= "<br>";//By Geoff
+$sLastMove .= "<br>";//R41 -> R51
+$sLastMove .= "";//@ 6/1/2015 2pm PST
 $sLastMove .= "</div>";
 
 #Logs off user
@@ -130,7 +139,6 @@ $sSignout .= "</div>";
 #Combines sidebar string
 $rSide .= $sImg . $sMsg . $sPhase . $sLastMove . $sSignout;
 $rSide .= "</div>";
-
 
 #
 # Demarcation lines - spaces between pools and board
@@ -160,13 +168,12 @@ $htmlB .= "</html>";
 #
 # Prints entire string for the board
 # 
-$rGBStr = $htmlT . $h . $b . $rP . $bP . $rSide . $rLine . $bLine . $htmlB;
+$rGBStr = $htmlT . $h . $b . $rP . $rSide . $rLine . $bLine . $htmlB;
 echo $rGBStr;
 
 #
-# Board string - 
+# Board string - Saves randomly generated terrain 
 #
-$boardStr = $b . $rSide . $rLine . $bSide . $bLine;
-$_SESSION['boardString'] = $boardStr;
+$_SESSION['boardString'] = $b;
 
 ?>

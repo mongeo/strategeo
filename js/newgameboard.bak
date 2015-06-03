@@ -1,13 +1,19 @@
-var p1 = "red"
+var p1 = "red";
 
+/*
+* 
+* Checks if destination is a valid move for player
+*
+*/
 function isPlaceable(player, destID){
-    //if already placed will be true //aleady taken care of
-//    if ($(destID)[0].nodeName == "IMG"){
-//	return true;
-//    }
-    if (destID.substring(0,1) == 'S'){
+    //Check if returning to right pool
+    var p = player.substring(0,1);//ie r for red
+    if (destID.substring(0,2) == p + 'S'){//ie rS or bS
 	return true;
     }
+
+    //Gets the board location
+    //takes out
     var num = parseInt(destID.substring(1));
     if (player == "red"){
 	if (num >= 1 && num <= 40){
@@ -33,59 +39,78 @@ function isPlaceable(player, destID){
 
 function isReady(){
     for (i = 0; i < 40; i++){
-	console.log("#S" + i);
-	if ($.trim($("#S" + i).html()) != ''){
-	    //$('#mbox').html("Not all pieces have been placed");
+	if ($.trim($("#" + p1.substring(0,1)  + "S" + i).html()) != ''){
 	    return false;
 	}
     }
     return true;
 }
 
+function setVals() {
+    for (i = 1; i < 41; i++) {
+	var temp = $('#M' + i + ":first-child").attr("id");
+	$("#F" + i).val(temp);
+    }
+}
+
 $(document).ready(function(){
+    $('#readyForm').submit(setVals());
     var i = 1;
     var source = "";
     var destination = "";
-    var sourceImage = "";
+    var sourceID = "";
+    var sourceValue = "";
     var sourceImageID = "";
     var sourceParent = "";
     document.addEventListener('click', function(e) {
-	if ($(e.target).hasClass('clickable')){
+	var color = e.target.id;
+	color = color.substring(0,1);
+	color = color.toLowerCase();
+	console.log(color);
+	if ($(e.target).hasClass('clickable') && p1.substring(0,1) == color || color == "m"){
+	    console.log(e.target.id);
+	    
 	    //case 1: Source is empty 
 	    if (i == 1 && $(e.target).get(0).tagName != "IMG"){
-		$('#mbox').html("Select a game piece"); 
+		$('#sMsg').html("Select a game piece"); 
+		console.log("Found image");
 	    }
 
 	    //case 2: Source is not empty
 	    else if (i == 1){
-		source = e.target.id;
-		sourceImage = e.target.outerHTML;
+		temp = e.target.id.split("l");
+		sourceID = e.target.id;
+		sourceValue = temp[0];
+		
 		sourceParent = $(e.target).parent();//
-		$('#mbox').html("Click a destination"); 
-		$('#selected').html("<img src='" + $(e.target).attr("src") + "'>"); 
+		console.log(sourceParent);
+		$('#sMsg').html("Click a destination"); 
+		$('#sImg').html("<img src='" + $(e.target).attr("src") + "'>"); 
 		i++;
 
 	    }
-
 	    //case 3: Destination is empty
 	    else if (i == 2 && $(e.target).get(0).tagName != "IMG") {
+		console.log("Source: " + source);
+		console.log("SourceID: " + sourceID);
+		console.log("SourceValue: " + sourceValue);
+		console.log("e.target.id: " + e.target.id);
 		if (isPlaceable(p1, e.target.id)){
 		    destination = e.target.id;
 
 		    //remove source
-		    var elem = document.getElementById(source);
+		    var elem = document.getElementById(sourceID);
 		    elem.parentNode.removeChild(elem);
-		    sourceParent.html("<div id='S' class='clickable'>&nbsp</div>");
 		    //place source
-		    $('#' + destination).html(sourceImage); 
-
+		    //$('#' + destination).html(sourceImage); 
+		    $('#' + destination).html("<img src='../img/"+ sourceValue +".png' id='"+ sourceValue +"l"+ destination  +"' class='clickable square'>");
 		    //change value of form element for post
 		    $('#F' + destination.substring(1)).val(source);
 		    console.log(destination);
 
 		    //remove source selection image
-		    $('#selected').html("");
-		    $("#mbox").html("");
+		    $('#sImg').html("");
+		    $("#sMsg").html("");
 		    //console.log("Destination =" + e.target.id + " id "+ source  + " sourceImage= " + sourceImage);
 
 		    //restart to get new source
@@ -97,13 +122,13 @@ $(document).ready(function(){
 		    sourceImage = "";
 
 		    if (isReady()){
-			$('#readyButton').html("<button onclick=''>Ready!</button>"); 
+			$('#readyButton').html("<button onclick='setVals()'>Ready!</button>"); 
 		    } else {
 			$('#readyButton').html("");
 		    }
 		    
 		} else {
-		    $('#mbox').html("Invalid destination"); 
+		    $('#sMsg').html("Invalid destination"); 
 		}
 
 	    }

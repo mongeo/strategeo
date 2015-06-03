@@ -1,48 +1,32 @@
+
 var p1 = "red";
 
-function isPlaceable(player, destID){
-//Don't have to worry about if empty or not
-//Taken care of before function call
-
-    //Check if returning to right pool
-    var p = player.substring(0,1);//ie r for red
-    if (destID.substring(0,2) == p + 'S'){//ie rS or bS
-	console.log("TRUE");
+/*
+* 
+* Checks if destination is a valid move for red player
+*
+*/
+function isPlaceable(destID){
+    if (destID.substring(0,2) == 'rS'){
 	return true;
     }
-    //Gets the board location
-    //takes out
     var num = parseInt(destID.substring(1));
-    if (player == "red"){
-	if (num >= 1 && num <= 40){
-	    //alert("valid red move");
-	    return true;
-	}
-	else {
-	    //alert("invalid move");
-	    return false;
-	}
+    if (num >= 1 && num <= 40){
+	return true;
     }
-    else{
-	if (num >= 61 && num <= 100){
-	    //alert("valid blue move");
-	    return true;
-	}
-	else {
-	    //alert("invalid move");
-	    return false;
-	}
+    else {
+	return false;
     }
 } 
 
 function isReady(){
+    /* commented out for testing purposes
     for (i = 0; i < 40; i++){
-//	console.log("#S" + i);
-	if ($.trim($("#" + p1.substring(0,1)  + "S" + i).html()) != ''){
-	    //$('#mbox').html("Not all pieces have been placed");
+	if ($.trim($("#rS" + i).html()) != ''){
 	    return false;
 	}
     }
+    */
     return true;
 }
 
@@ -50,13 +34,12 @@ function setVals() {
     for (i = 1; i < 41; i++) {
 	var temp = $('#M' + i + ":first-child").attr("id");
 	$("#F" + i).val(temp);
-	//console.log("Mid: " + temp + " ");
     }
 }
 
 $(document).ready(function(){
-    $('#readyForm').submit(setVals());
-    var i = 1;
+    //$('#readyForm').submit(setVals());
+    var i = 1;//keeps track of source / destination click
     var source = "";
     var destination = "";
     var sourceID = "";
@@ -67,73 +50,59 @@ $(document).ready(function(){
 	var color = e.target.id;
 	color = color.substring(0,1);
 	color = color.toLowerCase();
-	console.log(color);
-	if ($(e.target).hasClass('clickable') && p1.substring(0,1) == color || color == "m"){
-	    console.log(e.target.id);
-	    
-	    //case 1: Source is empty 
+
+	//Checks if clickable item and is red or empty space on board
+	if ($(e.target).hasClass('clickable') && color == "r" || color == "m"){
+	    //Case 1: Source is empty / not a game piece 
 	    if (i == 1 && $(e.target).get(0).tagName != "IMG"){
 		$('#sMsg').html("Select a game piece"); 
-		console.log("Found image");
 	    }
-
-	    //case 2: Source is not empty
+	    //Case 2: Source is not empty / is a game piece
 	    else if (i == 1){
 		temp = e.target.id.split("l");
 		sourceID = e.target.id;
 		sourceValue = temp[0];
-		
 		sourceParent = $(e.target).parent();//
-		console.log(sourceParent);
 		$('#sMsg').html("Click a destination"); 
 		$('#sImg').html("<img src='" + $(e.target).attr("src") + "'>"); 
 		i++;
-
 	    }
-	    //case 3: Destination is empty
+	    //Case 3: Destination is empty 
 	    else if (i == 2 && $(e.target).get(0).tagName != "IMG") {
-		console.log("Source: " + source);
-		console.log("SourceID: " + sourceID);
-		console.log("SourceValue: " + sourceValue);
-		console.log("e.target.id: " + e.target.id);
-		if (isPlaceable(p1, e.target.id)){
+		if (isPlaceable(e.target.id)){
 		    destination = e.target.id;
-
-		    //remove source
+		    //Remove source
 		    var elem = document.getElementById(sourceID);
 		    elem.parentNode.removeChild(elem);
-		    //place source
+		    //Place source
 		    //$('#' + destination).html(sourceImage); 
 		    $('#' + destination).html("<img src='../img/"+ sourceValue +".png' id='"+ sourceValue +"l"+ destination  +"' class='clickable square'>");
-		    //change value of form element for post
-		    $('#F' + destination.substring(1)).val(source);
-		    console.log(destination);
 
-		    //remove source selection image
+		    //Change value of form element for post
+		    $('#F' + destination.substring(1)).val(sourceValue);
+
+		    //Remove source selection image / msg
 		    $('#sImg').html("");
 		    $("#sMsg").html("");
-		    //console.log("Destination =" + e.target.id + " id "+ source  + " sourceImage= " + sourceImage);
 
-		    //restart to get new source
+		    //Restart to get new source
 		    i = 1;
 
-		    //empty source and destination -- necessary?
+		    //Empty source and destination
 		    source = "";
 		    destination = "";
 		    sourceImage = "";
 
+		    //Show ready button if all pieces are placed
 		    if (isReady()){
-			$('#readyButton').html("<button onclick='setVals()'>Ready!</button>"); 
+			$('#readyButton').html("<input type='submit' value='Ready!'>"); 
 		    } else {
 			$('#readyButton').html("");
-		    }
-		    
+		    }		    
 		} else {
 		    $('#sMsg').html("Invalid destination"); 
 		}
-
 	    }
-
 	}
     }, false);
 });
