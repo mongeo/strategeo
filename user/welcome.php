@@ -15,7 +15,7 @@ if (isset($_SESSION['auth']) == false){
    #
    $gStr = "<table><tr><th>GameID</th><th>Red</th><th>Blue</th><th>Turn</th><th>Last Move</th></tr>";
    $gquery = "SELECT gameID, red, blue, state, lastMoveBy, lastMoveTime 
-   	     	     FROM games 
+   	     	     FROM GAME 
 		     WHERE red='".$name."' OR blue='".$name."' 
 		     AND state < 0 AND state <= 3";
    $gameN = 0;//number of total current games
@@ -46,7 +46,7 @@ if (isset($_SESSION['auth']) == false){
    #
    $cStr = "<table><tr><th>GameID</th><th>Player</th></tr>";
    $cquery = "SELECT gameID, red 
-   	      FROM games 
+   	      FROM GAME 
 	      WHERE state='1' AND red<>'".$name."' 
 	      ORDER BY lastMoveTime LIMIT 10";
    if ($cstmt = $conn->prepare($cquery)){
