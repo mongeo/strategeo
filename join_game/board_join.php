@@ -1,16 +1,15 @@
 <?php
 ini_set('display_errors', 1);
 
-$path = $_SERVER['CONTEXT_DOCUMENT_ROOT'] . "/stratego/";
-include $path . "php_includes/functions.php";
-include $path . "php_includes/verifyname.php";
-
-if (isset($_GET['gid'])){
-   $gid = ;//gameID... temporary for testing
-} else {
-   header("Location: http://jeff.cis.cabrillo.edu/~gimontague/stratego/user/index.php");
+#
+# Check if user is authenticated
+#
+if (!isset($_SESSION['auth']){
+   header("Location: ../user/login.php");
    exit();
-}
+   #$gid = $_GET['gid'];//gameID... temporary for testing
+} 
+
 //Update games database
 //state set to 2 (=joined)
 $gameInsert = "UPDATE games SET blue='$name', state='2', lastMoveBy='$name' WHERE gameID='$gid'";
