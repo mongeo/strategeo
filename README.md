@@ -19,7 +19,7 @@ Inside that file write your login credentials
 #
 # Set up database
 #
-
+###need to update schema file###
 Create database in mysql called "STRATEGEO"
 
 Then use command:
