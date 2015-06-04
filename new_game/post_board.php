@@ -40,26 +40,31 @@ if (mysqli_num_rows($gidres) < 1){
 
 
 # Turn $_POST into comma seperated string
-$stack = [];
+$r_stack = [];
+$b_stack = [];
 foreach($_POST as $key => $value){
    if ($value == ""){
-      $value = "Null";
+      $value = "N";
    }
-   array_push($stack, "$key $value");
+   array_push($r_stack, "$value");
+   array_push($b_stack, "$value[0]");
 }
-$post_Str = implode(',', $stack);
+$post_r_str = implode(',', $r_stack);
+$post_b_str = implode(',', $b_stack);
 #$post_Str = base64_encode($post_Str);
 
-echo $post_Str;
+echo $post_r_str;
+echo "<br>";
+echo $post_b_str;
 
 #
 # Insert red values into BOARD
+# Only show red pieces (not values for blue player's view)
 #
-$binstmt = $conn->prepare("INSERT INTO BOARD (gameID, redPlayerView) VALUES (?,?)");
-$binstmt -> bind_param('is', $gidval, $post_Str);
+$binstmt = $conn->prepare("INSERT INTO BOARD (gameID, redPlayerView, bluePlayerView) VALUES (?,?,?)");
+$binstmt -> bind_param('iss', $gidval, $post_r_str, $post_b_str);
 $binstmt -> execute();
 $binstmt -> close();
-
 
 #debug
 #print_r($_POST);

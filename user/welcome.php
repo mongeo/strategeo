@@ -68,7 +68,7 @@ if (isset($_SESSION['auth']) == false){
    $h .= "<h1>Welcome ". ucfirst(strtolower($name))  ."!</h1>";
    $h .= "<h2>Your Current Games: $gameN / 3</h2>";
    $h .= "$gStr";
-   if ($gameN < 4){
+   if ($gameN < 3){
       $h .= "<br><form action='../new_game/index.php' method='POST'>";
       $h .= "<input type='submit' value='Create A Game!' name='createGame'></form>";
    }

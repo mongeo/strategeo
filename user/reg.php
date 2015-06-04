@@ -5,8 +5,8 @@ ini_set('display_errors', 1);
 session_start();
 if (isset($_SESSION['auth'])){
    print "You have an open session as " . $_SESSION['auth'] . ". Cannot create an additional account. ";
-   print "Redirecting to home in 5 seconds.";
-   header("refresh:5;url=welcome.php");
+   print "Redirecting to home in 3 seconds.";
+   header("refresh:3;url=welcome.php");
    exit();
 } else {
 
