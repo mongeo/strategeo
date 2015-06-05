@@ -25,3 +25,13 @@ Create database in mysql called "STRATEGEO"
 Then use command:
 mysql -u username -p STRATEGEO < /var/www/html/strategeo/db/schema.sql
 
+#
+# Game states
+#
+
+0: Not initialized
+1: Initialized
+2: Joined (Blue's selection)
+3: Joined / Blue finished (Red's turn)
+4: In progress
+5: Complete

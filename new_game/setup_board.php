@@ -175,5 +175,4 @@ echo $rGBStr;
 # Board string - Saves randomly generated terrain 
 #
 $_SESSION['boardString'] = $b;
-
 ?>

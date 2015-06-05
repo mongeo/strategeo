@@ -17,7 +17,7 @@ if (isset($_SESSION['auth']) == false){
    $gquery = "SELECT gameID, red, blue, state, lastMoveBy, lastMoveTime 
    	     	     FROM GAME 
 		     WHERE red='".$name."' OR blue='".$name."' 
-		     AND state < 0 AND state <= 3";
+		     AND state > 0 AND state < 5";
    $gameN = 0;//number of total current games
    if ($gstmt = $conn->prepare($gquery)){
       $gstmt->execute();
@@ -29,8 +29,10 @@ if (isset($_SESSION['auth']) == false){
             $gStr .= "<td>$blue</td>";
             if ($state == 1){
                $gStr .= "<td>Awaiting Player</td>";
-            } else if ($name == $lmb){
-               $gStr .= "<td>Yours</td>";
+            } elseif ($state == 2 && $name == $blue){
+               $gStr .= "<td>Yours: <a href='../join_game/board_join.php'>Setup Board</a></td>";
+	    } elseif ($state > 3 && $lmb != $name) {
+               $gStr .= "<td>Yours: <a href='#'>Make a move!</a></td>";
             } else {
                $gStr .= "<td>Theirs</td>";
             }
@@ -53,7 +55,7 @@ if (isset($_SESSION['auth']) == false){
       $cstmt->execute();
       $cstmt->bind_result($cid,$cr);
       while ($cstmt->fetch()){
-         $cStr .= "<tr><td><a href='../joingame/joingameboard.php?gid='$cid'>$cid</a></td>";
+         $cStr .= "<tr><td><a href='../join_game/board_join.php?gid=1'>$cid</a></td>";
          $cStr .= "<td>$cr</td>";
          $cStr .= "</tr>";
       }
