@@ -12,7 +12,8 @@ session_unset();
 session_destroy();
 $_POST = array();
 header("refresh:5;url=login.php");
-print "You have been logged out. Redirecting to login page in 3 seconds. . .";
+print "You have been logged out. Redirecting to login page in 3 seconds. . . ";
+print "<br>Or click <a href='login.php'>here</a> to return to the login page";
 exit();
 ?>
 

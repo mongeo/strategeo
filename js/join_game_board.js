@@ -38,7 +38,7 @@ function setVals() {
 
 function addReds(){
    for (i = 1; i < 41; i++) {
-       $('#M' + i).html("<img src='../img/RBack.png' id='RlM"+ i  +"' class='clickable square'>");
+       $('#M' + i).html("<img src='../img/Rback.png' id='RlM"+ i  +"' class='square'>");
        //Change value of form element for post           
        $('#F' + i).val("R");
 
@@ -60,7 +60,7 @@ $(document).ready(function(){
 	color = color.toLowerCase();
 
 	//Checks if clickable item and is red or empty space on board
-	if ($(e.target).hasClass('clickable') && color == "r" || color == "m"){
+	if ($(e.target).hasClass('clickable') && color == "b" || color == "m"){
 	    //Case 1: Source is empty / not a game piece 
 	    if (i == 1 && $(e.target).get(0).tagName != "IMG"){
 		$('#sMsg').html("Select a game piece"); 

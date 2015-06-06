@@ -1,34 +1,42 @@
 <?php
 ini_set('display_errors', 1);
 
+#
+# Authenticate user
+#
 session_start();
-#
-# Check if user is authenticated
-#
-if (!isset($_SESSION['auth']){
+if (!isset($_SESSION['auth'])){
    header("Location: ../user/login.php");
    exit();
 }
+# Get user's name
+$name = $_SESSION['auth'];
 
 #
-# Check if gid was set
+# Check if gid was set via $_GET
+#  or if a session exists
+#  and set as appropriate
 #
-if (!isset($_GET['gid']){
+$gid = "";
+if (isset($_GET['gid'])){
+   $gid = $_GET['gid'];
+} elseif(!isset($_SESSION['gid'])) {
+   $gid = $_SESSION['gid'];
+} else {
    print "No game selected. Redirecting in 3 seconds. . . ";
    header("refresh:3;url=../user/index.php");
    exit();
 }
+print "GID = $gid";
 
-# Get the gameID an user's name
-$gid = $_GET['gid'];
-$name = $_SESSION['auth];
+require "../php_includes/db_connect.php";
 
 #
 # Get game information and see if it is joinable
 #
 $board = "";
 $state = "";
-if ($gstmt = $conn->prepare("SELECT boardString, state FROM GAME  WHERE gameID=?")){
+if ($gstmt = $conn->prepare("SELECT boardStr, state FROM GAME  WHERE gameID=?")){
    $gstmt -> bind_param('i', $gid);
    $gstmt -> execute();
    $gstmt -> bind_result($b, $s);
@@ -55,8 +63,10 @@ if ($state == 0){
 # Update games database
 #  set state to 2 (Blue's selection) and add blue's name 
 #
-$gameInsert = "UPDATE GAME SET blue='$name', state='2' WHERE gameID='$gid'";
-if (mysqli_query($conn, $gameInsert)) {
+$gameUpdate = "UPDATE GAME 
+	       SET blue='$name', state='2' 
+	       WHERE gameID='$gid'";
+if (mysqli_query($conn, $gameUpdate)) {
     echo "Successfuly joined Game $gid";
 } else {
     echo "Failed to join game.<br>" . mysqli_error($conn);
@@ -75,12 +85,12 @@ for ($i = 1; $i < 101; $i++){
 #
 # Header - Displays welcome message and ready button
 # for when user has placed all pieces on board
-#
+#80
 $h = "<div id='header'>";
 $h .= "<h1>Stratego</h1>";
 $h .= "<br><div id='headerText'> Welcome " . ucfirst($name) . "! ";
 $h .= "Place your pieces on the board. Click ready when button appears ";
-$h .= "<form id='readyForm' action='post_board.php' method='POST'>";
+$h .= "<form id='readyForm' action='post_join.php' method='POST'>";
 $h .=  $f . "<div id='readyButton'></div></form></div></div>";
 
 #
@@ -147,7 +157,8 @@ $htmlB .= "</html>";
 #
 # Prints entire string for the board
 #
-$bGBStr = $htmlT . $h . $b . $rP . $side . $rLine . $bLine . $htmlB;
+$bGBStr = $htmlT . $h . base64_decode($board) . $side . $rLine . $bLine . $htmlB;
 echo $bGBStr;
 
+$_SESSION['gid'] = $gid;
 ?>

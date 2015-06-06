@@ -1,53 +1,113 @@
 <?php
 ini_set('display_errors', 1);
 
-$path = $_SERVER['CONTEXT_DOCUMENT_ROOT'] . "/stratego/";
-include $path . "php_includes/functions.php";
-include $path . "php_includes/verifyname.php";
-
-if (!isset($_SESSION['bStr'])) {
-   header("Location: http://jeff.cis.cabrillo.edu/~gimontague/stratego/user/index.php");
+# Authenticate user
+session_start();
+if (!isset($_SESSION['auth'])) {
+   header("Location: ../user/login.php");
    exit();			      
 }
+$name = $_SESSION['auth'];
 
+# Check if game id has been set
+if (!isset($_SESSION['gid'])) {
+   print "No game selected. Redirecting in 3 seconds. . . ";
+   header("refresh:3;url=../user/index.php");
+   exit();
+}
+$gid = $_SESSION['gid'];
 
-$name = mysql_real_escape_string($name);
-$bStr = mysql_real_escape_string($_SESSION['bStr']);
+require "../php_includes/db_connect.php";
 
-//Create new game in database
-//state set to 1 (=created)
-$gameInsert = "INSERT INTO games (red, state, lastMoveBy, boardString) VALUES ('$name','1','$name','$bStr')";
-if (mysqli_query($conn, $gameInsert)) {
-    echo "<h1>New game created successfully!</h1><br><br><a href='../user/index.php'>Return to your home page</a>";
+#
+# Get game information and see if it is joinable
+#
+$state = "";
+$blue = "";
+if ($gstmt = $conn->prepare("SELECT state, blue 
+   	     		     FROM GAME 
+			     WHERE gameID=?")){
+   $gstmt -> bind_param('i', $gid);
+   $gstmt -> execute();
+   $gstmt -> bind_result($s, $b);
+   $gstmt -> fetch();
+   $state = $s;
+   $blue = $b;
+   $gstmt -> close();
 } else {
-    echo "Failed to create game. Email administrator for resolution.";
+  echo "Couldn't connect<br> " . mysqli_error($conn);
 }
-//
-
-//Get current gameID value
-$gidq = "SELECT gameID FROM games ORDER BY gameID DESC Limit 1";
-$gidres = mysqli_query($conn, $gidq);
-$gidrow = $gidres->fetch_array(MYSQLI_NUM);
-$gidval = $gidrow[0];
-if (mysqli_num_rows($gidres) < 1){
-     echo "Could not find any rows for gameID in games";
+if ($state == 0){
+   print "Cannot join game: Not yet initialized. ";
+   print "Redirecting in 3 seconds. . . ";
+   header("refresh:3;url=../user/index.php");
+   exit();
+} elseif ($state == 1){
+   print "Cannot join game: Already joined. ";
+   print "Redirecting in 3 seconds. . . ";
+   header("refresh:3;url=../user/index.php");
+   exit();
+} elseif ($state > 2 && $state <= 5){
+   print "Cannot join game: Already joined. ";
+   print "Redirecting in 3 seconds. . . ";
+   header("refresh:3;url=../user/index.php");
+   exit();
+} elseif ($state != 2){
+   print "Cannot join game: Unknown error. Game state: $state ";
+   print "Redirecting in 3 seconds. . . ";
+   header("refresh:3;url=../user/index.php");
+   exit();
+} elseif ($blue != $name){
+   print "Cannot join game: Wrong user. You: $name. Blue Player: $blue ";
+   print "Redirecting in 3 seconds. . . ";
+   header("refresh:3;url=../user/index.php");
+   exit();
 }
-//End get gameID value
 
-//Insert values into board
-$binstmt = $conn->stmt_init();
-$binstmt -> prepare("INSERT INTO board (gameID, gamePiece, location) VALUES (?,?,?)");
+#
+# Update database new game in database
+#
+$gameUpdate = "UPDATE GAME 
+	       SET state='3', lastMoveBy='$name', lastMoveBlue='Joined Game' 
+	       Where gameID='$gid'";
+if (!mysqli_query($conn, $gameUpdate)) {
+    print "Failed to connect ot database and update game.<br>" . mysqli_error($conn);
+    print "<br><a href='../user/index.php'>Return to your home page</a>";
+}
+
+# Turn $_POST into comma seperated string
+$b_stack = [];
+$r_stack = [];
 foreach($_POST as $key => $value){
-  $binstmt -> bind_param('iss', $gidval, $value, $key);
-  $binstmt -> execute();
+   if ($value == ""){
+      $value = "N";
+   }
+   array_push($b_stack, "$value");
+   array_push($r_stack, "$value[0]");
 }
+$post_b_str = implode(',', $b_stack);
+$post_r_str = implode(',', $r_stack);
+#$post_Str = base64_encode($post_Str);
+
+echo $post_r_str;
+echo "<br>";
+echo $post_b_str;
+
+#
+# Insert red values into BOARD
+# Only show red pieces (not values for blue player's view)
+#
+$binstmt = $conn->prepare("UPDATE BOARD 
+	 SET bluePlayerView=?, redPlayerView=? 
+	 WHERE gameID=?");
+$binstmt -> bind_param('ssi', $post_b_str, $post_r_str, $gid);
+$binstmt -> execute();
 $binstmt -> close();
 
-//End insert into board
+#debug
+#print_r($_POST);
 
-
-//unset board string
-$_SESSION['bStr'] = '';
-unset($_SESSION['bStr']);
-
+# Unset gid
+$_SESSION['gid'] = '';
+unset($_SESSION['gid']);
 ?>

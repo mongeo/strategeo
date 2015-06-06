@@ -55,7 +55,7 @@ if (isset($_SESSION['auth']) == false){
       $cstmt->execute();
       $cstmt->bind_result($cid,$cr);
       while ($cstmt->fetch()){
-         $cStr .= "<tr><td><a href='../join_game/board_join.php?gid=1'>$cid</a></td>";
+         $cStr .= "<tr><td><a href='../join_game/board_join.php?gid=$cid'>$cid</a></td>";
          $cStr .= "<td>$cr</td>";
          $cStr .= "</tr>";
       }
