@@ -31,15 +31,35 @@ require "../php_includes/db_connect.php";
 #
 # Get game information and see if it is joinable
 #
-$board = "";
+$red =  "";
+$blue = "";
 $state = "";
-if ($gstmt = $conn->prepare("SELECT boardStr, state FROM GAME  WHERE gameID=?")){
+$board = "";
+$lastMoveBy = "";
+$lastMoveTime = "";
+$lastMoveRed = "";
+$lastMoveBlue = "";
+$redPlayerView = "";
+$bluePlayerView = "";
+if ($gstmt = $conn->prepare(
+	"SELECT red, blue, state, boardStr, lastMoveBy, lastMoveTime, lastMoveRed, lastMoveBlue, redPlayerView, bluePlayerView
+	 FROM GAME
+	 LEFT JOIN BOARD ON GAME.gameID=BOARD.gameID
+	 WHERE GAME.gameID=?")){
    $gstmt -> bind_param('i', $gid);
    $gstmt -> execute();
-   $gstmt -> bind_result($b, $s);
+   $gstmt -> bind_result($re, $bl, $s, $b, $lmby, $lmt, $lmred, $lmblue, $rpv, $bpv);
    $gstmt -> fetch();
-   $board = $b;
+   $red = $re;
+   $blue = $bl;
    $state = $s;
+   $board = $b;
+   $lastMoveBy = $lmby;
+   $lastMoveTime = $lmt;
+   $lastMoveRed = $lmred;
+   $lastMoveBlue = $lmblue;
+   $redPlayerView = $rpv;
+   $bluePlayerView = $bpv;
    $gstmt -> close();
 } else {
   echo "Couldn't connect<br> " . mysqli_error($conn);
@@ -59,6 +79,26 @@ if ($state == 0){
 }
 
 #
+# Get game piece locations and values place them into divs
+#  which will be pulled into javascript array and used
+#  for gameplay
+#
+$red_pieces = explode(',', $redPlayerView);
+$blue_pieces = explode(',', $bluePlayerView);
+$divs = "";
+for ($i = 0; $i < 100; $i++){
+    $n = $i + 1;
+    if (strlen($red_pieces[$i]) > 1){
+       $divs .= "<div id='T$n' class='hidden'>$red_pieces[$i]</div>";
+    } elseif (strlen($blue_pieces[$i]) > 1){
+       $divs .= "<div id='T$n' class='hidden'>$blue_pieces[$i]</div>";
+    } else {
+       $divs .= "<div id='T$n' class='hidden'>N</div>";
+    }
+}
+echo $divs;
+
+#
 # Create hidden form and append to h (f)
 # used to store placements in database
 #
@@ -70,7 +110,7 @@ for ($i = 1; $i < 101; $i++){
 #
 # Header - Displays welcome message and ready button
 # for when user has placed all pieces on board
-#80
+#
 $h = "<div id='header'>";
 $h .= "<h1>Stratego</h1>";
 $h .= "<br><div id='headerText'> Welcome <span id='user_name'>" . ucfirst($name) . "</span>! ";
