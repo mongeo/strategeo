@@ -36,17 +36,30 @@ function setVals() {
     }
 }
 
-function addReds(){
-   for (i = 1; i < 41; i++) {
-       $('#M' + i).html("<img src='../img/RBack.png' id='RlM"+ i  +"' class='clickable square'>");
+function addBlues(){
+   for (i = 61; i < 101; i++) {
+       $('#M' + i).html("<img src='../img/Bback.png' id='RlM"+ i  +"' class='square'>");
        //Change value of form element for post           
-       $('#F' + i).val("R");
+       $('#F' + i).val("B");
 
     }
 }
 
+function getName(){
+    var res = $('#user_name').html();
+    return $res;
+}
+
+function getState(){
+    var res = $('#state_num').html();
+    return $res;
+}
+
 $(document).ready(function(){
-    addReds();
+    var state = getState();
+    if (state == 3){
+	addBlues();
+    }
     var i = 1;//keeps track of source / destination click
     var source = "";
     var destination = "";
@@ -60,7 +73,7 @@ $(document).ready(function(){
 	color = color.toLowerCase();
 
 	//Checks if clickable item and is red or empty space on board
-	if ($(e.target).hasClass('clickable') && color == "r" || color == "m"){
+	if ($(e.target).hasClass('clickable') && color == "b" || color == "m"){
 	    //Case 1: Source is empty / not a game piece 
 	    if (i == 1 && $(e.target).get(0).tagName != "IMG"){
 		$('#sMsg').html("Select a game piece"); 

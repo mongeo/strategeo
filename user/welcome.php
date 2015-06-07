@@ -13,7 +13,7 @@ if (isset($_SESSION['auth']) == false){
    #
    # Create html table for user's current games
    #
-   $gStr = "<table><tr><th>GameID</th><th>Red</th><th>Blue</th><th>Turn</th><th>Last Move</th></tr>";
+   $gStr = "<table><tr><th>GameID</th><th>Red</th><th>Blue</th><th>Turn</th><th>Last Move</th><th>Phase</th></tr>";
    $gquery = "SELECT gameID, red, blue, state, lastMoveBy, lastMoveTime 
    	     	     FROM GAME 
 		     WHERE red='".$name."' OR blue='".$name."' 
@@ -30,13 +30,14 @@ if (isset($_SESSION['auth']) == false){
             if ($state == 1){
                $gStr .= "<td>Awaiting Player</td>";
             } elseif ($state == 2 && $name == $blue){
-               $gStr .= "<td>Yours: <a href='../join_game/board_join.php'>Setup Board</a></td>";
-	    } elseif ($state > 3 && $lmb != $name) {
-               $gStr .= "<td>Yours: <a href='#'>Make a move!</a></td>";
+               $gStr .= "<td>Yours: <a href='../join_game/board_join.php?gid=".$gid."'>Set up board</a></td>"; 
+	    } elseif ($state > 2 && $lmb != $name) {
+               $gStr .= "<td>Yours: <a href='../load_game/board_load.php?gid=".$gid."'>Make a move!</a></td>";
             } else {
                $gStr .= "<td>Theirs</td>";
             }
 	    $gStr .= "<td>$lmt</td>";
+	    $gStr .= "<td>$state</td>";
             $gStr .= "</tr>";
       }
       $gstmt->close();
@@ -68,13 +69,13 @@ if (isset($_SESSION['auth']) == false){
    #
    $h = "";
    $h .= "<h1>Welcome ". ucfirst(strtolower($name))  ."!</h1>";
-   $h .= "<h2>Your Current Games: $gameN / 3</h2>";
+   $h .= "<h2>Your Active Games ($gameN / 3):</h2>";
    $h .= "$gStr";
    if ($gameN < 3){
       $h .= "<br><form action='../new_game/index.php' method='POST'>";
       $h .= "<input type='submit' value='Create A Game!' name='createGame'></form>";
    }
-   $h .= "<h2>Open Games:</h2>";
+   $h .= "<h2>Games Awaiting Additional Player:</h2>";
    $h .= "$cStr";
    if ($gameN < 4){
       $h .= "<br><form action='../join_game/index.php' method='POST'>";

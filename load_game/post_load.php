@@ -79,17 +79,16 @@ if (!mysqli_query($conn, $gameUpdate)) {
 
 # Turn $_POST into comma seperated string
 $b_stack = [];
+$r_stack = [];
 foreach($_POST as $key => $value){
-   $k = intval(substr($key, 1));
-   if ($k >= 1 && $k <= 40){
-      $value = "R";
-   }	     
    if ($value == ""){
       $value = "N";
    }
    array_push($b_stack, "$value");
+   array_push($r_stack, "$value[0]");
 }
 $post_b_str = implode(',', $b_stack);
+$post_r_str = implode(',', $r_stack);
 #$post_Str = base64_encode($post_Str);
 
 
@@ -98,9 +97,9 @@ $post_b_str = implode(',', $b_stack);
 # Only show red pieces (not values for blue player's view)
 #
 $binstmt = $conn->prepare("UPDATE BOARD 
-	 SET bluePlayerView=? 
+	 SET bluePlayerView=?, redPlayerView=? 
 	 WHERE gameID=?");
-$binstmt -> bind_param('si', $post_b_str, $gid);
+$binstmt -> bind_param('ssi', $post_b_str, $post_r_str, $gid);
 $binstmt -> execute();
 $binstmt -> close();
 

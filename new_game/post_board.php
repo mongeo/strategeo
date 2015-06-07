@@ -3,7 +3,7 @@ ini_set('display_errors', 1);
 
 # Authenticate user
 session_start();
-if (!isset($_SESSION['boardString']) && !isset($_SESSION['auth'])) {
+if (!isset($_SESSION['boardString']) || !isset($_SESSION['auth'])) {
    header("Location: ../user/login.php");
    exit();			      
 }
@@ -19,8 +19,6 @@ $bStr = base64_encode($_SESSION['boardString']);//use base64_decode to extract
 $gameInsert = "INSERT INTO GAME (red, state, lastMoveBy, boardStr, lastMoveRed) 
 	       VALUES ('$name','1','$name','$bStr','Created game')";
 if (mysqli_query($conn, $gameInsert)) {
-    print "<h1>New game created successfully!</h1><br><br>";
-    print "<a href='../user/index.php'>Return to your home page</a>";
 } else {
     print "Failed to create game.<br>" . mysqli_error($conn);
 }
@@ -38,31 +36,27 @@ if (mysqli_num_rows($gidres) < 1){
      echo "Could not find any rows for gameID in games";
 }
 
-
 # Turn $_POST into comma seperated string
 $r_stack = [];
-$b_stack = [];
 foreach($_POST as $key => $value){
+   $k = intval(substr($key, 1));
+   if ($k >= 61 && $k <= 100){
+      $value = "B";
+   }
    if ($value == ""){
       $value = "N";
    }
    array_push($r_stack, "$value");
-   array_push($b_stack, "$value[0]");
 }
 $post_r_str = implode(',', $r_stack);
-$post_b_str = implode(',', $b_stack);
 #$post_Str = base64_encode($post_Str);
-
-echo $post_r_str;
-echo "<br>";
-echo $post_b_str;
 
 #
 # Insert red values into BOARD
 # Only show red pieces (not values for blue player's view)
 #
-$binstmt = $conn->prepare("INSERT INTO BOARD (gameID, redPlayerView, bluePlayerView) VALUES (?,?,?)");
-$binstmt -> bind_param('iss', $gidval, $post_r_str, $post_b_str);
+$binstmt = $conn->prepare("INSERT INTO BOARD (gameID, redPlayerView) VALUES (?,?)");
+$binstmt -> bind_param('is', $gidval, $post_r_str);
 $binstmt -> execute();
 $binstmt -> close();
 
@@ -72,4 +66,10 @@ $binstmt -> close();
 # Unset boardString
 $_SESSION['boardString'] = '';
 unset($_SESSION['boardString']);
+
+header("refresh:3;url=../user/index.php");
+print "<h1>New game created successfully!</h1><br><br>";
+print "<a href='../user/index.php'>Return to your home page</a>";
+exit();
+
 ?>
