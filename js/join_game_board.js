@@ -38,7 +38,7 @@ function setVals() {
 
 function addReds(){
    for (i = 1; i < 41; i++) {
-       $('#M' + i).html("<img src='../img/Rback.png' id='RlM"+ i  +"' class='square'>");
+       $('#M' + i).html("<img src='../img/R.png' id='R' class='square'>");
        //Change value of form element for post           
        $('#F' + i).val("R");
 

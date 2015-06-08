@@ -27,7 +27,6 @@ if (isset($_GET['gid'])){
    header("refresh:3;url=../user/index.php");
    exit();
 }
-print "GID = $gid";
 
 require "../php_includes/db_connect.php";
 
@@ -66,9 +65,7 @@ if ($state == 0){
 $gameUpdate = "UPDATE GAME 
 	       SET blue='$name', state='2' 
 	       WHERE gameID='$gid'";
-if (mysqli_query($conn, $gameUpdate)) {
-    echo "Successfuly joined Game $gid";
-} else {
+if (!mysqli_query($conn, $gameUpdate)) {
     echo "Failed to join game.<br>" . mysqli_error($conn);
 }
 

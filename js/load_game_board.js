@@ -40,7 +40,7 @@ function setVals() {
 
 function addBlues(){
    for (i = 61; i < 101; i++) {
-       $('#M' + i).html("<img src='../img/Bback.png' id='RlM"+ i  +"' class='square'>");
+       $('#M' + i).html("<img src='../img/B.png' id='B' class='square'>");
        //Change value of form element for post           
        $('#F' + i).val("B");
 
@@ -57,9 +57,10 @@ function getState(){
     return res;
 }
 
+//Returns R or B
 function getPlayerColor(){
     var res = $('#player_color').html();
-    return res.toLowerCase();
+    return res.substring(0,1);
 }
 
 function gameArrayInit(){
@@ -72,27 +73,48 @@ function gameArrayInit(){
 
 function fillBoard(color){
     for (i = 1; i < 101; i++){
-	console.log("i = " + i + " gameArray[i] = " + gameArray[i]);
 	if (gameArray[i] == 'N'){
 	    continue;
-	} else if (color == 'red'){
+	} else if (color == 'R'){
 	    if (gameArray[i].charAt(0) == "B"){
-		$('#M'+i).html("<img src=../img/Bback.png>");//id?class?
+		$('#M'+i).html("<img src='../img/Bback.png' id='blue_back' class='blue_piece clickable'>");
 	    } else {
-		$('#M'+i).html("<img src=../img/" +gameArray[i]+ ".png>");//id?class
+		$('#M'+i).html("<img src='../img/" +gameArray[i]+ ".png' id='" +gameArray[i]+ "' class='blue_piece clickable'> ");
 	    }
-	} else if (color == 'blue'){
+	} else if (color == 'B'){
 	    if (gameArray[i].charAt(0) == "R"){
-		$('#M'+i).html("<img src=../img/Rback.png>");//id?class?
+		$('#M'+i).html("<img src='../img/Rback.png' id='red_back' class='red_piece clickable'>");
 	    } else {
-		$('#M'+i).html("<img src=../img/" +gameArray[i]+ ".png>");//id?class
+		$('#M'+i).html("<img src='../img/" +gameArray[i]+ ".png' id='" +gameArray[i]+ "' class='red_piece clickable'> ");
+		$('#M'+i).html("<img src=../img/" +gameArray[i]+ ".png>");
 	    }
 
 	}
     }
 }
 
+function isClickable(target, playerColor, pieceColor, click){
+    if ($(target).hasClass('clickable')){
+	//Case 1: source click
+	if (click == 1){
+	    if (playerColor == pieceColor){
+		return true;
+	    }
+	} else {
+	    
+
+	}
+
+	//click == 1 is the source click
+	if (playerColor == pieceColor && click == 1){
+
+	}
+    }
+    return false;
+}
+
 $(document).ready(function(){
+    var playerColor = getPlayerColor();
     var state = getState();
     if (state == 3){
 	//Clear game initialization data
@@ -102,8 +124,7 @@ $(document).ready(function(){
 	addBlues();
     }
     gameArrayInit();
-    console.log(gameArray);
-    fillBoard(getPlayerColor());    
+    fillBoard(playerColor);    
     var i = 1;//keeps track of source / destination click
     var source = "";
     var destination = "";
@@ -112,12 +133,11 @@ $(document).ready(function(){
     var sourceImageID = "";
     var sourceParent = "";
     document.addEventListener('click', function(e) {
-	var color = e.target.id;
-	color = color.substring(0,1);
-	color = color.toLowerCase();
-
+	console.log(e.target.id.substring(0,1));
+	var pieceColor = e.target.id.substring(0,1);
+	//isClickable(color)
 	//Checks if clickable item and is red or empty space on board
-	if ($(e.target).hasClass('clickable') && color == "b" || color == "m"){
+	if ($(e.target).hasClass('clickable')){
 	    //Case 1: Source is empty / not a game piece 
 	    if (i == 1 && $(e.target).get(0).tagName != "IMG"){
 		$('#sMsg').html("Select a game piece"); 
