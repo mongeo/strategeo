@@ -106,7 +106,7 @@ for ($i = 0; $i < 100; $i++){
        $divs .= "<div id='T$n' class='hidden'>N</div>";
     }
 }
-echo $divs;
+//echo $divs;
 
 #
 # Create hidden form and append to h (f)
@@ -199,7 +199,7 @@ $htmlB .= "</html>";
 #
 # Prints entire string for the board
 #
-$bGBStr = $htmlT . $h . base64_decode($board) . $side . $rLine . $bLine . $htmlB;
+$bGBStr = $htmlT . $h . base64_decode($board) . $divs  . $side . $rLine . $bLine . $htmlB;
 echo $bGBStr;
 
 $_SESSION['gid'] = $gid;

@@ -49,15 +49,21 @@ function addBlues(){
 
 function getName(){
     var res = $('#user_name').html();
-    return $res;
+    return res;
 }
 
 function getState(){
     var res = $('#state_num').html();
-    return $res;
+    return res;
+}
+
+function getPlayerColor(){
+    var res = $('#player_color').html();
+    return res.toLowerCase();
 }
 
 function gameArrayInit(){
+    gameArray.push("Error: Don't use 0");//to start index at 1
     for (i = 1; i < 101; i++){
 	gameArray.push($('#T' + i).html());
 	$('#T' + i).remove();	
@@ -66,19 +72,20 @@ function gameArrayInit(){
 
 function fillBoard(color){
     for (i = 1; i < 101; i++){
+	console.log("i = " + i + " gameArray[i] = " + gameArray[i]);
 	if (gameArray[i] == 'N'){
 	    continue;
 	} else if (color == 'red'){
 	    if (gameArray[i].charAt(0) == "B"){
 		$('#M'+i).html("<img src=../img/Bback.png>");//id?class?
 	    } else {
-		$('#M'+i).html("<img src=../img/R" +i+ ".png>");//id?class
+		$('#M'+i).html("<img src=../img/" +gameArray[i]+ ".png>");//id?class
 	    }
 	} else if (color == 'blue'){
 	    if (gameArray[i].charAt(0) == "R"){
 		$('#M'+i).html("<img src=../img/Rback.png>");//id?class?
 	    } else {
-		$('#M'+i).html("<img src=../img/B" +i+ ".png>");//id?class
+		$('#M'+i).html("<img src=../img/" +gameArray[i]+ ".png>");//id?class
 	    }
 
 	}
@@ -88,9 +95,15 @@ function fillBoard(color){
 $(document).ready(function(){
     var state = getState();
     if (state == 3){
+	//Clear game initialization data
+	$("#bPool").remove();
+	$("#rLine").remove();
+	$("#bLine").remove();
 	addBlues();
     }
     gameArrayInit();
+    console.log(gameArray);
+    fillBoard(getPlayerColor());    
     var i = 1;//keeps track of source / destination click
     var source = "";
     var destination = "";

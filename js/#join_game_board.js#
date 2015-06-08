@@ -30,14 +30,23 @@ function isReady(){
 }
 
 function setVals() {
-    for (i = 61; i < 101; i++) {
+    for (i = 1; i < 41; i++) {
 	var temp = $('#M' + i + ":first-child").attr("id");
 	$("#F" + i).val(temp);
     }
 }
 
+function addReds(){
+   for (i = 1; i < 41; i++) {
+       $('#M' + i).html("<img src='../img/Rback.png' id='RlM"+ i  +"' class='square'>");
+       //Change value of form element for post           
+       $('#F' + i).val("R");
+
+    }
+}
+
 $(document).ready(function(){
-    //$('#readyForm').submit(setVals());
+    addReds();
     var i = 1;//keeps track of source / destination click
     var source = "";
     var destination = "";
