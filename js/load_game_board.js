@@ -52,6 +52,11 @@ function getName(){
     return res;
 }
 
+/*
+*
+*
+*/
+
 function getState(){
     var res = $('#state_num').html();
     return res;
@@ -63,6 +68,7 @@ function getPlayerColor(){
     return res.substring(0,1);
 }
 
+
 function gameArrayInit(){
     gameArray.push("Error: Don't use 0");//to start index at 1
     for (i = 1; i < 101; i++){
@@ -71,51 +77,94 @@ function gameArrayInit(){
     }
 }
 
+/*
+* Uses gameArrayInit to fill the board with appropriate pieces 
+* 
+* img id convention [Color][Value][Location] -> ['R'/'B']['0'-'11']l['1'-'100']
+* ie red flag @ top right corner would be 'R0l10'
+*  back of a blue piece in bottom left corner would be Bl91
+*/
 function fillBoard(color){
     for (i = 1; i < 101; i++){
 	if (gameArray[i] == 'N'){
 	    continue;
 	} else if (color == 'R'){
 	    if (gameArray[i].charAt(0) == "B"){
-		$('#M'+i).html("<img src='../img/Bback.png' id='blue_back' class='blue_piece clickable'>");
+		$('#M'+i).html("<img src='../img/B.png' id='B_" + i + "' class='blue_piece clickable'>");
 	    } else {
-		$('#M'+i).html("<img src='../img/" +gameArray[i]+ ".png' id='" +gameArray[i]+ "' class='blue_piece clickable'> ");
+		$('#M'+i).html("<img src='../img/" + gameArray[i] + ".png' id='" +gameArray[i]+ "_" + i + "' class='blue_piece clickable'> ");
 	    }
 	} else if (color == 'B'){
 	    if (gameArray[i].charAt(0) == "R"){
-		$('#M'+i).html("<img src='../img/Rback.png' id='red_back' class='red_piece clickable'>");
+		$('#M'+i).html("<img src='../img/R.png' id='R_" + i + "' class='red_piece clickable'>");
 	    } else {
-		$('#M'+i).html("<img src='../img/" +gameArray[i]+ ".png' id='" +gameArray[i]+ "' class='red_piece clickable'> ");
-		$('#M'+i).html("<img src=../img/" +gameArray[i]+ ".png>");
+		$('#M'+i).html("<img src='../img/" + gameArray[i] + ".png' id='" +gameArray[i]+ "_" + i + "' class='rede_piece clickable'> ");
 	    }
-
 	}
     }
 }
 
-function isClickable(target, playerColor, pieceColor, click){
-    if ($(target).hasClass('clickable')){
-	//Case 1: source click
-	if (click == 1){
-	    if (playerColor == pieceColor){
-		return true;
-	    }
+/*
+* Return array with either location if empty space
+*  or piece value and location if occupied by piece
+*  ie '45' or ['R6','12']
+*/
+function idParseToArray(id){
+    var a = []
+    if (id.substring(0,1) == "M"){
+	a.push(id.substring(1));
+	return a;
+    } else {
+	return id.split();
+    }
+}
+
+/*
+* source/target = 
+* 
+*
+*/
+function isClickable(playerColor, pieceColor, click){
+    //Source click
+    if (click == 1){
+	//Source can only be your own piece
+	if (playerColor == pieceColor){
+	    return true;
 	} else {
-	    
-
+	    return false;
 	}
-
-	//click == 1 is the source click
-	if (playerColor == pieceColor && click == 1){
-
+    //Destination click    
+    } else if (click == 2){
+	//Destination cannot be your own piece
+	if (playerColor == pieceColor){
+	    return false;
 	}
+	return true
     }
     return false;
+}
+
+function isValidMove(sourceID, targetID){
+    var sArray = idParseToArray(sourceID);
+    var tArray = idParseToArray(targetID);
+    var sourceLocation = a[1];
+    var targetLocation = "";
+    var isTargetEmpty = false;
+    if (tArray.length > 1){
+	targetLocation = tArray[1];
+    } else {
+	targetLocation = tArray[0];
+	isTargetEmpty = true;
+    }	    
 }
 
 $(document).ready(function(){
     var playerColor = getPlayerColor();
     var state = getState();
+    var i = 1;//keeps track of source(1)/destination(2) click
+    var sourceID = "";
+    var sourceValue = "";
+
     if (state == 3){
 	//Clear game initialization data
 	$("#bPool").remove();
@@ -125,18 +174,29 @@ $(document).ready(function(){
     }
     gameArrayInit();
     fillBoard(playerColor);    
-    var i = 1;//keeps track of source / destination click
-    var source = "";
-    var destination = "";
-    var sourceID = "";
-    var sourceValue = "";
-    var sourceImageID = "";
-    var sourceParent = "";
     document.addEventListener('click', function(e) {
-	console.log(e.target.id.substring(0,1));
 	var pieceColor = e.target.id.substring(0,1);
-	//isClickable(color)
-	//Checks if clickable item and is red or empty space on board
+	//Checks if clickable item 
+	if ($(e.target).hasClass('clickable') && isClickable(playerColor, pieceColor, i)){
+	    if (i == 1){
+		//set target as source
+		sourceID = e.target.id;
+		var tempAarray = sourceID.split("_");
+		sourceValue = tempAarray[0];
+		console.log(sourceValue);
+	    } else if (i == 2){
+		//check if valid move
+		
+	    } else {
+		//error
+	    }
+	}
+    }, false);
+});
+
+/*
+
+
 	if ($(e.target).hasClass('clickable')){
 	    //Case 1: Source is empty / not a game piece 
 	    if (i == 1 && $(e.target).get(0).tagName != "IMG"){
@@ -174,7 +234,7 @@ $(document).ready(function(){
 		    i = 1;
 
 		    //Empty source and destination
-		    source = "";
+		    //source = "";
 		    destination = "";
 		    sourceImage = "";
 
@@ -189,6 +249,5 @@ $(document).ready(function(){
 		}
 	    }
 	}
-    }, false);
-});
 
+*/
