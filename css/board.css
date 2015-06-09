@@ -34,6 +34,23 @@ button {
     top: 200px;
 }
 
+#board_border {
+    position: absolute;
+    background-color: black;
+    background-image: url("../img/bbg4.png");
+    border-radius: 25px; 
+    -webkit-box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);    
+    height: 540px;
+    width: 540px;
+    left: 230px;
+    top: 182px;
+    opacity:1;
+    filter:alpha(opacity=100); /* For IE8 and earlier */
+    z-index: -10;
+}
+
 #rPool {
     position: absolute;
     background-color: black;
@@ -78,8 +95,8 @@ button {
 
 #rSide {
     position: absolute;
-    top: 25px;
-    left: 25px;
+    top: 20px;
+    left: 15px;
     width: 200px;
     height: 750px;
     background-color: white;
@@ -153,4 +170,8 @@ button {
 .square {
     height: 50px;
     width: 50px;
+}
+
+.hidden {
+    visibility: hidden;
 }

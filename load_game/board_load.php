@@ -196,10 +196,12 @@ $htmlB = "</div>";
 $htmlB .= "</body>";
 $htmlB .= "</html>";
 
+$bg = "<div id='board_border'></div>";
+
 #
 # Prints entire string for the board
 #
-$bGBStr = $htmlT . $h . base64_decode($board) . $side . $rLine . $bLine . $htmlB;
+$bGBStr = $htmlT . $h . base64_decode($board) . $side . $rLine . $bLine . $bg  . $htmlB;
 echo $bGBStr;
 
 $_SESSION['gid'] = $gid;

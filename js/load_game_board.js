@@ -56,7 +56,6 @@ function getName(){
 *
 *
 */
-
 function getState(){
     var res = $('#state_num').html();
     return res;
@@ -124,11 +123,18 @@ function idParseToArray(id){
 * 
 *
 */
-function isClickable(playerColor, pieceColor, click){
+function isClickable(playerColor, pieceColor, click, target){
     //Source click
     if (click == 1){
+	var splitA = target.split("_");
+	var targetVal = splitA[0].substring(1);
+
+	//Flags and bombs can't move
+	if (targetVal == "0" || targetVal == "11") { 
+	    return false;
+	} 
 	//Source can only be your own piece
-	if (playerColor == pieceColor){
+	else if (playerColor == pieceColor){
 	    return true;
 	} else {
 	    return false;
@@ -144,18 +150,50 @@ function isClickable(playerColor, pieceColor, click){
     return false;
 }
 
-function isValidMove(sourceID, targetID){
+function isScoutMove(source, dest){
+    //Up
+    
+    //Down
+
+    //Left
+
+    //Right
+}
+
+
+function isValidMove(sourceID, destID){
     var sArray = idParseToArray(sourceID);
-    var tArray = idParseToArray(targetID);
-    var sourceLocation = a[1];
-    var targetLocation = "";
-    var isTargetEmpty = false;
-    if (tArray.length > 1){
-	targetLocation = tArray[1];
+    var dArray = idParseToArray(destID);
+    var sourceValue =  sArray[0];
+    var sourceColor = sourceValue.substring(0,1);
+    var sourceRank = sourceValue.substring(1);
+    var sourceLocation = sArray[1];
+    var destValue = null;
+    var destColor = null;
+    var destRank = null;
+    var destLocation = "";
+    if (dArray.length > 1){
+	destValue = dArray[0]
+	destColor = destValue.substring(0,1);
+	destRank = destValue.substring(1);
+	destLocation = dArray[1];
     } else {
-	targetLocation = tArray[0];
-	isTargetEmpty = true;
+	destLocation = dArray[0];
     }	    
+
+    //Destination is empty
+    if (destValue == null){
+	//Scout move
+	if (sourceRank == 2){
+	    isScoutMove(sourceLocation,destLocation);
+	}
+
+	//Other move
+
+    }
+    
+
+
 }
 
 $(document).ready(function(){
@@ -177,7 +215,7 @@ $(document).ready(function(){
     document.addEventListener('click', function(e) {
 	var pieceColor = e.target.id.substring(0,1);
 	//Checks if clickable item 
-	if ($(e.target).hasClass('clickable') && isClickable(playerColor, pieceColor, i)){
+	if ($(e.target).hasClass('clickable') && isClickable(playerColor, pieceColor, i, e.target.id)){
 	    if (i == 1){
 		//set target as source
 		sourceID = e.target.id;
@@ -186,7 +224,7 @@ $(document).ready(function(){
 		console.log(sourceValue);
 	    } else if (i == 2){
 		//check if valid move
-		
+		isValidMove();
 	    } else {
 		//error
 	    }
