@@ -29,24 +29,24 @@ function isReady(){
     return true;
 }
 
-function setVals() {
-    for (i = 1; i < 41; i++) {
-	var temp = $('#M' + i + ":first-child").attr("id");
-	$("#F" + i).val(temp);
-    }
-}
-
 function addReds(){
    for (i = 1; i < 41; i++) {
        $('#M' + i).html("<img src='../img/R.png' id='R' class='square'>");
-       //Change value of form element for post           
        $('#F' + i).val("R");
-
     }
 }
 
+function setFormLake(){
+    var lakeA = [43,44,47,48,53,54,57,58];
+    for (i = 0; i < lakeA.length; i++){
+        $('#F' + lakeA[i]).val("X");
+    }
+}
+
+
 $(document).ready(function(){
     addReds();
+    setFormLate();
     var i = 1;//keeps track of source / destination click
     var source = "";
     var destination = "";

@@ -1,6 +1,3 @@
-
-var p1 = "red";
-
 /*
 * 
 * Checks if destination is a valid move for red player
@@ -30,15 +27,15 @@ function isReady(){
     return true;
 }
 
-function setVals() {
-    for (i = 1; i < 41; i++) {
-	var temp = $('#M' + i + ":first-child").attr("id");
-	$("#F" + i).val(temp);
+function setFormLake(){
+    var lakeA = [43,44,47,48,53,54,57,58];
+    for (i = 0; i < lakeA.length; i++){
+	$('#F' + lakeA[i]).val("X");
     }
 }
 
 $(document).ready(function(){
-    //$('#readyForm').submit(setVals());
+    setFormLake();
     var i = 1;//keeps track of source / destination click
     var source = "";
     var destination = "";
@@ -46,6 +43,7 @@ $(document).ready(function(){
     var sourceValue = "";
     var sourceImageID = "";
     var sourceParent = "";
+
     document.addEventListener('click', function(e) {
 	var color = e.target.id;
 	color = color.substring(0,1);
@@ -71,6 +69,7 @@ $(document).ready(function(){
 	    else if (i == 2 && $(e.target).get(0).tagName != "IMG") {
 		if (isPlaceable(e.target.id)){
 		    destination = e.target.id;
+		    console.log(destination);
 		    //Remove source
 		    var elem = document.getElementById(sourceID);
 		    elem.parentNode.removeChild(elem);

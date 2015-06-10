@@ -40,7 +40,9 @@ if (mysqli_num_rows($gidres) < 1){
 $r_stack = [];
 foreach($_POST as $key => $value){
    $k = intval(substr($key, 1));
-   if ($k >= 61 && $k <= 100){
+   if ($k == 43 || $k == 44 || $k == 47 || $k == 48 || $k == 53 || $k == 54 || $k == 57 || $k == 58){
+      $value = "X";
+   }  elseif ($k >= 61 && $k <= 100){
       $value = "B";
    }
    if ($value == ""){

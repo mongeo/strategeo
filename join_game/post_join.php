@@ -81,7 +81,9 @@ if (!mysqli_query($conn, $gameUpdate)) {
 $b_stack = [];
 foreach($_POST as $key => $value){
    $k = intval(substr($key, 1));
-   if ($k >= 1 && $k <= 40){
+   if ($k == 43 || $k == 44 || $k == 47 || $k == 48 || $k == 53 || $k == 54 || $k == 57 || $k == 58){
+      $value = "X";
+   }  elseif ($k >= 1 && $k <= 40){
       $value = "R";
    }	     
    if ($value == ""){

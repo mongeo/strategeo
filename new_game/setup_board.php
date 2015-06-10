@@ -26,15 +26,15 @@ while($i < 101){
               $b .= "<tr>";
         }
         if ($i == 43 || $i == 47){
-           $b .= "<td background='../img/L1.png'><div id='M".$i."' class='square'></div></td>";
+           $b .= "<td background='../img/L1.png'><div id='M".$i."' class='square lake'></div></td>";
         } else if ($i == 44 || $i == 48){
-           $b .= "<td background='../img/L2.png'><div id='M".$i."' class='square'></div></td>";
+           $b .= "<td background='../img/L2.png'><div id='M".$i."' class='square lake'></div></td>";
         } else if ($i == 53 || $i == 57){
-           $b .= "<td background='../img/L3.png'><div id='M".$i."' class='square'></div></td>";
+           $b .= "<td background='../img/L3.png'><div id='M".$i."' class='square lake'></div></td>";
         } else if ($i == 54 || $i == 58){
-           $b .= "<td background='../img/L4.png'><div id='M".$i."' class='square'></div></td>";
+           $b .= "<td background='../img/L4.png'><div id='M".$i."' class='square lake'></div></td>";
         } else {
-           $b .= "<td background='../img/T" . rand(1,3). ".png'><div id='M".$i."' class='clickable square'></div></td>";
+           $b .= "<td background='../img/T" . rand(1,3). ".png' id='M".$i."'><div id='M".$i."' class='clickable square'></div></td>";
         }
         $i++;
         if($i % 10 == 1){
@@ -49,7 +49,7 @@ $b .= "</table>";
 $rP = "<table id='rPool'>";
 $i = 0;
 while($i < 40){
-        if($i % 10 == 0){
+        if($i % 4 == 0){
               $rP .= "<tr>";
         }
         $rP .= "<td><div id='rS" . $i  . "' class='clickable square'>";
@@ -57,7 +57,7 @@ while($i < 40){
         $rP .= "</div></td>";
 
         $i++;
-        if($i % 10 == 0){
+        if($i % 4 == 0){
               $rP .= "</tr>";
         }
 }
@@ -69,7 +69,7 @@ $rP .= "</table>";
 $bP = "<table id='bPool'>";
 $i = 0;
 while($i < 40){
-        if($i % 10 == 0){
+        if($i % 4 == 0){
               $bP .= "<tr>";
         }
         $bP .= "<td><div id='bS" . $i  . "' class='clickable square'>";
@@ -77,7 +77,7 @@ while($i < 40){
         $bP .= "</div></td>";
 
         $i++;
-        if($i % 10 == 0){
+        if($i % 4 == 0){
               $bP .= "</tr>";
         }
 }
@@ -164,11 +164,13 @@ $htmlB = "</div>";
 $htmlB .= "</body>";
 $htmlB .= "</html>";
 
+$bg = "<div id='board_border'></div>";
+$sbg = "<div id='s_board_border'></div>";
 
 #
 # Prints entire string for the board
 # 
-$rGBStr = $htmlT . $h . $b . $rP . $rSide . $rLine . $bLine . $htmlB;
+$rGBStr = $htmlT . $h . $b . $rP . $rSide . $bg . $sbg . $htmlB;
 echo $rGBStr;
 
 #

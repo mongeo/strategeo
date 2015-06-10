@@ -85,7 +85,7 @@ function gameArrayInit(){
 */
 function fillBoard(color){
     for (i = 1; i < 101; i++){
-	if (gameArray[i] == 'N'){
+	if (gameArray[i] == 'N' || gameArray[i] == 'X'){ // N = empty, X = Lake
 	    continue;
 	} else if (color == 'R'){
 	    if (gameArray[i].charAt(0) == "B"){
@@ -150,16 +150,134 @@ function isClickable(playerColor, pieceColor, click, target){
     return false;
 }
 
-function isScoutMove(source, dest){
-    //Up
-    
-    //Down
+function isPathClear(source, dest, dir){
+    // Need to include obstructions store value as X
+    // in gameArray 
 
-    //Left
-
-    //Right
+    var i = source;
+    if (dir == "W"){
+	i--;
+	if (gameArray[i] == dest){
+	    return true;
+	} else if (gameArray[i] != 'N') {
+	    return false;
+	}
+    } else if (dir == "E"){
+	i++;
+	if (gameArray[i] == dest){
+	    return true;
+	} else if (gameArray[i] != 'N') {
+	    return false;
+	}
+    } else if (dir == "N"){
+	i - 10;
+	if (gameArray[i] == dest){
+	    return true;
+	} else if (gameArray[i] != 'N') {
+	    return false;
+	}
+    } else { // dir == 'S'
+	i + 10;
+	if (gameArray[i] == dest){
+	    return true;
+	} else if (gameArray[i] != 'N') {
+	    return false;
+	}
+    }
 }
 
+function isScoutMove(source, dest){
+    // -1 because array starts at 1
+    // without -> 1 / 10 = 0 | 10 / 10 = 1 
+    // ie 0-9 / 10 = 0 | 90-99 / 10 = 9
+    var sRow = (s - 1) / 10; 
+    var dRow = (d - 1) / 10;
+    var sCol = s % 10;
+    var dCol = d % 10;
+    //Horizontal
+    if (sRow == dRow){
+	//West
+	if (dCol < sCol){
+	    if(isPathClear(source, dest, "W")){
+		return true;
+	    } else {
+		return false;
+	    }
+	}
+	//East
+	else {
+	    if(isPathClear(source, dest, "E")){
+		return true;
+	    } else {
+		return false;
+	    }
+	}
+    }
+
+    //Vertical 
+    if (sCol == dCol){
+	//North
+	if (dRow < sRow){
+	    if(isPathClear(source, dest, "N")){	    
+		return true;
+	    } else {
+		return false;
+	    }
+	}
+	//South
+	else {
+	    if(isPathClear(source, dest, "S")){
+		return true;
+	    } else {
+		return false;
+	    }
+	}
+    }
+}
+
+//No need to factor in lakes becaues they are not clickable
+function isRegMove(source, dest){
+    var sRow = (s - 1) / 10;
+    var dRow = (d - 1) / 10;
+    var sCol = s % 10;
+    var dCol = d % 10;
+
+    //Horizontal
+    if (dRow == sRow){
+	//Left
+	if (dest == source - 1){
+	    return true;
+	} 
+	//Right
+	else if (dest == source + 1){
+	    return true;
+	}
+	//Invalid
+	else {
+	    return false;
+	}
+    } 
+    //Vertical
+    else if (dRow == sRow){
+	//Top
+	if (dest = source - 10){
+	    return true;
+	}
+	//Down
+	else if (dest = source + 10) {
+	    return true;
+	}
+	
+	//Invalid
+	else {
+	    return false;
+	}
+    }
+    //Invalid
+    else {
+	return false;
+    }
+}
 
 function isValidMove(sourceID, destID){
     var sArray = idParseToArray(sourceID);
@@ -180,20 +298,33 @@ function isValidMove(sourceID, destID){
     } else {
 	destLocation = dArray[0];
     }	    
+    
+    //Source and destination are same
+    if (sourceID == destID){
+	return false;
+    }
 
     //Destination is empty
     if (destValue == null){
 	//Scout move
-	if (sourceRank == 2){
-	    isScoutMove(sourceLocation,destLocation);
+	if (sourceRank != 2){
+	    if (isRedMove(sourceLocation, destLocation)){
+		return true;
+	    } else {
+		return false;
+	    }
 	}
-
 	//Other move
-
+	else {
+	    if (isScoutMove(sourceLocation, destLocation)){
+		return true;
+	    } else {
+		return false;
+	    }
+	}
+    } else {
+	return false;
     }
-    
-
-
 }
 
 $(document).ready(function(){
@@ -212,6 +343,7 @@ $(document).ready(function(){
     }
     gameArrayInit();
     fillBoard(playerColor);    
+    console.log(gameArray);
     document.addEventListener('click', function(e) {
 	var pieceColor = e.target.id.substring(0,1);
 	//Checks if clickable item 
@@ -222,11 +354,45 @@ $(document).ready(function(){
 		var tempAarray = sourceID.split("_");
 		sourceValue = tempAarray[0];
 		console.log(sourceValue);
+		$('#sMsg').html("Click a destination");
+                $('#sImg').html("<img src='" + $(e.target).attr("src") + "'>");
+		i++;
+		console.log(sourceID);
 	    } else if (i == 2){
+		var destID = e.target.ID 
+		console.log(destID);
 		//check if valid move
-		isValidMove();
-	    } else {
-		//error
+		if (isValidMove(sourceID, destID)){
+		    var elem = document.getElementById(sourceID);
+		    elem.parentNode.removeChild(elem);
+		    //Place source
+		    $('#' + destID).html("<img src='../img/"+ sourceValue +".png' id='"+ sourceValue +"l"+ destID  +"' class='clickable square'>");
+
+		    //Change value of form element for post
+		    $('#F' + destID.substring(1)).val(sourceValue);
+
+		    //Remove source selection image / msg
+		    $('#sImg').html("");
+		    $("#sMsg").html("");
+
+		    //Restart to get new source
+		    i = 1;
+
+		    //Empty source and destination
+		    //source = "";
+		    destID = "";
+		    sourceImage = "";
+
+		    //Show ready button if all pieces are placed
+		    if (isReady()){
+			$('#readyButton').html("<input type='submit' value='Ready!'>"); 
+		    } else {
+			$('#readyButton').html("");
+		    }
+		} else {
+		    //error
+		    $('#sMsg').html("Invalid destination"); 
+		}
 	    }
 	}
     }, false);
