@@ -46,7 +46,7 @@ function setFormLake(){
 
 $(document).ready(function(){
     addReds();
-    setFormLate();
+    setFormLake();
     var i = 1;//keeps track of source / destination click
     var source = "";
     var destination = "";

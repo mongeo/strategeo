@@ -154,7 +154,7 @@ $htmlB .= "</html>";
 #
 # Prints entire string for the board
 #
-$bGBStr = $htmlT . $h . base64_decode($board) . $side . $rLine . $bLine . $htmlB;
+$bGBStr = $htmlT . $h . base64_decode($board) . $side .  $htmlB;
 echo $bGBStr;
 
 $_SESSION['gid'] = $gid;

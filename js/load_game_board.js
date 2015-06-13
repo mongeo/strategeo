@@ -109,12 +109,12 @@ function fillBoard(color){
 *  ie '45' or ['R6','12']
 */
 function idParseToArray(id){
-    var a = []
+    var a = [];
     if (id.substring(0,1) == "M"){
 	a.push(id.substring(1));
 	return a;
     } else {
-	return id.split();
+	return id.split("_");
     }
 }
 
@@ -145,15 +145,19 @@ function isClickable(playerColor, pieceColor, click, target){
 	if (playerColor == pieceColor){
 	    return false;
 	}
-	return true
+	return true;
     }
     return false;
 }
 
+
+//
+// Source location: 
+//
 function isPathClear(source, dest, dir){
     // Need to include obstructions store value as X
     // in gameArray 
-
+    console.log("source " + source + " dest " + dest + " dir " + dir);
     var i = source;
     if (dir == "W"){
 	i--;
@@ -190,10 +194,13 @@ function isScoutMove(source, dest){
     // -1 because array starts at 1
     // without -> 1 / 10 = 0 | 10 / 10 = 1 
     // ie 0-9 / 10 = 0 | 90-99 / 10 = 9
-    var sRow = (s - 1) / 10; 
-    var dRow = (d - 1) / 10;
-    var sCol = s % 10;
-    var dCol = d % 10;
+    source = source - 1;
+    dest = dest - 1;
+    var sRow = parseInt(source / 10); 
+    var dRow = parseInt(dest / 10);
+    var sCol = source % 10;
+    var dCol = dest % 10;
+    console.log("scout srow " + sRow + " drow " + dRow);
     //Horizontal
     if (sRow == dRow){
 	//West
@@ -237,11 +244,14 @@ function isScoutMove(source, dest){
 
 //No need to factor in lakes becaues they are not clickable
 function isRegMove(source, dest){
-    var sRow = (s - 1) / 10;
-    var dRow = (d - 1) / 10;
-    var sCol = s % 10;
-    var dCol = d % 10;
-
+    source = source - 1;
+    dest = dest - 1;
+    var sRow = parseInt(source / 10);
+    var dRow = parseInt(dest / 10);
+    var sCol = source % 10;
+    var dCol = dest % 10;
+    console.log("srow " + sRow + " dRow " + dRow);
+    console.log("scol " + sCol + " dcol " + dCol);
     //Horizontal
     if (dRow == sRow){
 	//Left
@@ -258,7 +268,7 @@ function isRegMove(source, dest){
 	}
     } 
     //Vertical
-    else if (dRow == sRow){
+    else if (dCol == sCol){
 	//Top
 	if (dest = source - 10){
 	    return true;
@@ -279,8 +289,12 @@ function isRegMove(source, dest){
     }
 }
 
+//
+//
+//
 function isValidMove(sourceID, destID){
     var sArray = idParseToArray(sourceID);
+    console.log(sArray);
     var dArray = idParseToArray(destID);
     var sourceValue =  sArray[0];
     var sourceColor = sourceValue.substring(0,1);
@@ -290,6 +304,7 @@ function isValidMove(sourceID, destID){
     var destColor = null;
     var destRank = null;
     var destLocation = "";
+    console.log(sourceLocation);
     if (dArray.length > 1){
 	destValue = dArray[0]
 	destColor = destValue.substring(0,1);
@@ -308,7 +323,7 @@ function isValidMove(sourceID, destID){
     if (destValue == null){
 	//Scout move
 	if (sourceRank != 2){
-	    if (isRedMove(sourceLocation, destLocation)){
+	    if (isRegMove(sourceLocation, destLocation)){
 		return true;
 	    } else {
 		return false;
@@ -343,8 +358,8 @@ $(document).ready(function(){
     }
     gameArrayInit();
     fillBoard(playerColor);    
-    console.log(gameArray);
     document.addEventListener('click', function(e) {
+	console.log("i " + i);
 	var pieceColor = e.target.id.substring(0,1);
 	//Checks if clickable item 
 	if ($(e.target).hasClass('clickable') && isClickable(playerColor, pieceColor, i, e.target.id)){
@@ -353,14 +368,12 @@ $(document).ready(function(){
 		sourceID = e.target.id;
 		var tempAarray = sourceID.split("_");
 		sourceValue = tempAarray[0];
-		console.log(sourceValue);
 		$('#sMsg').html("Click a destination");
                 $('#sImg').html("<img src='" + $(e.target).attr("src") + "'>");
 		i++;
 		console.log(sourceID);
 	    } else if (i == 2){
-		var destID = e.target.ID 
-		console.log(destID);
+		var destID = e.target.id;
 		//check if valid move
 		if (isValidMove(sourceID, destID)){
 		    var elem = document.getElementById(sourceID);
@@ -375,11 +388,10 @@ $(document).ready(function(){
 		    $('#sImg').html("");
 		    $("#sMsg").html("");
 
-		    //Restart to get new source
-		    i = 1;
 
 		    //Empty source and destination
-		    //source = "";
+		    sourceID = "";
+		    sourceValue = "";
 		    destID = "";
 		    sourceImage = "";
 
@@ -392,6 +404,9 @@ $(document).ready(function(){
 		} else {
 		    //error
 		    $('#sMsg').html("Invalid destination"); 
+		    //Restart to get new source
+		    i = 1;
+
 		}
 	    }
 	}
