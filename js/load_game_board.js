@@ -160,33 +160,53 @@ function isPathClear(source, dest, dir){
     console.log("source " + source + " dest " + dest + " dir " + dir);
     var i = source;
     if (dir == "W"){
-	i--;
-	if (gameArray[i] == dest){
-	    return true;
-	} else if (gameArray[i] != 'N') {
-	    return false;
+	while (i > dest){
+	    i--;
+	    console.log("game array " + gameArray[i] + " dest " + dest);
+	    if (i == dest){
+		return true;
+	    } else if (gameArray[i] != 'N') {
+		return false;
+	    }
 	}
+	return false;
     } else if (dir == "E"){
-	i++;
-	if (gameArray[i] == dest){
-	    return true;
-	} else if (gameArray[i] != 'N') {
-	    return false;
+	while (i < dest){
+	    i++;
+	    console.log("game array " + gameArray[i] + " dest " + dest);
+	    if (i == dest){
+		return true;
+	    } else if (gameArray[i] != 'N') {
+		return false;
+	    }
 	}
+	return false;
     } else if (dir == "N"){
-	i - 10;
-	if (gameArray[i] == dest){
-	    return true;
-	} else if (gameArray[i] != 'N') {
-	    return false;
+	console.log("game array " + gameArray[i] + " dest " + dest);
+	while (i > dest){
+	    i = i - 10;
+	    if (i == dest){
+		return true;
+	    } else if (gameArray[i] != 'N') {
+		return false;
+	    }
 	}
-    } else { // dir == 'S'
-	i + 10;
-	if (gameArray[i] == dest){
-	    return true;
-	} else if (gameArray[i] != 'N') {
-	    return false;
+	return false;
+    } else if (dir == "S") { // dir == 'S'
+	while (i < dest){
+	    i = i + 10;
+	    console.log(gameArray);
+	    console.log("game array " + gameArray[i] + " dest " + dest + " i " + i);
+	    if (i == dest){
+		console.log("true");
+		return true;
+	    } else if (gameArray[i] != 'N') {
+		console.log("false 1: gamearray[i] = " + gameArray[i]);
+		return false;
+	    }
 	}
+	console.log("false 2");
+	return false;
     }
 }
 
@@ -200,12 +220,11 @@ function isScoutMove(source, dest){
     var dRow = parseInt(dest / 10);
     var sCol = source % 10;
     var dCol = dest % 10;
-    console.log("scout srow " + sRow + " drow " + dRow);
     //Horizontal
     if (sRow == dRow){
 	//West
 	if (dCol < sCol){
-	    if(isPathClear(source, dest, "W")){
+	    if(isPathClear(source+1, dest+1, "W")){
 		return true;
 	    } else {
 		return false;
@@ -213,7 +232,7 @@ function isScoutMove(source, dest){
 	}
 	//East
 	else {
-	    if(isPathClear(source, dest, "E")){
+	    if(isPathClear(source+1, dest+1, "E")){
 		return true;
 	    } else {
 		return false;
@@ -225,7 +244,7 @@ function isScoutMove(source, dest){
     if (sCol == dCol){
 	//North
 	if (dRow < sRow){
-	    if(isPathClear(source, dest, "N")){	    
+	    if(isPathClear(source+1, dest+1, "N")){	    
 		return true;
 	    } else {
 		return false;
@@ -233,7 +252,7 @@ function isScoutMove(source, dest){
 	}
 	//South
 	else {
-	    if(isPathClear(source, dest, "S")){
+	    if(isPathClear(source+1, dest+1, "S")){
 		return true;
 	    } else {
 		return false;
@@ -250,8 +269,6 @@ function isRegMove(source, dest){
     var dRow = parseInt(dest / 10);
     var sCol = source % 10;
     var dCol = dest % 10;
-    console.log("srow " + sRow + " dRow " + dRow);
-    console.log("scol " + sCol + " dcol " + dCol);
     //Horizontal
     if (dRow == sRow){
 	//Left
@@ -294,7 +311,6 @@ function isRegMove(source, dest){
 //
 function isValidMove(sourceID, destID){
     var sArray = idParseToArray(sourceID);
-    console.log(sArray);
     var dArray = idParseToArray(destID);
     var sourceValue =  sArray[0];
     var sourceColor = sourceValue.substring(0,1);
@@ -304,7 +320,6 @@ function isValidMove(sourceID, destID){
     var destColor = null;
     var destRank = null;
     var destLocation = "";
-    console.log(sourceLocation);
     if (dArray.length > 1){
 	destValue = dArray[0]
 	destColor = destValue.substring(0,1);
@@ -342,6 +357,16 @@ function isValidMove(sourceID, destID){
     }
 }
 
+function confirmOrReset(){
+    $('#readyButton').html("<button type='button' onclick='confirm('yes')'>Confirm Move</button><button type='button' onclick='confirm('no')'>Reset</button>"); 
+    //Change mbox message
+    //Change button to confirm
+}
+
+function confirm(s,d){
+    console.log("confirm() s= " + s + " d " + d)
+}
+
 $(document).ready(function(){
     var playerColor = getPlayerColor();
     var state = getState();
@@ -371,11 +396,21 @@ $(document).ready(function(){
 		$('#sMsg').html("Click a destination");
                 $('#sImg').html("<img src='" + $(e.target).attr("src") + "'>");
 		i++;
-		console.log(sourceID);
 	    } else if (i == 2){
 		var destID = e.target.id;
+		var destLoc = "";
+		var temp = idParseToArray(destID);
+		if (temp.length > 1){
+		    destLoc = temp[1].substring(1);
+		} else {
+		    destLoc = temp[0].substring(1);
+		}
 		//check if valid move
 		if (isValidMove(sourceID, destID)){
+		    $("#sMsg").html("Confirm move: " + sourceValue + " to " + destLoc + "?");
+		    $('#readyButton').html("<button type='button' onclick='confirm(" + sourceID + "," + destID +")'>Make Move</button><button type='button' onclick='reset()'>Reset</button>"); 
+		    /*
+		    confirm = confirmMove(sourceID, destID);
 		    var elem = document.getElementById(sourceID);
 		    elem.parentNode.removeChild(elem);
 		    //Place source
@@ -401,6 +436,7 @@ $(document).ready(function(){
 		    } else {
 			$('#readyButton').html("");
 		    }
+*/
 		} else {
 		    //error
 		    $('#sMsg').html("Invalid destination"); 
