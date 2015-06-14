@@ -1,4 +1,5 @@
 var gameArray = [];
+var capture = false;
 
 /*
 * 
@@ -156,6 +157,7 @@ function isClickable(playerColor, pieceColor, click, target){
 function isPathClear(source, dest, dir){
     // Need to include obstructions store value as X
     // in gameArray 
+    console.log(gameArray);
     var i = source;
     if (dir == "W"){
 	while (i > dest){
@@ -180,9 +182,9 @@ function isPathClear(source, dest, dir){
 	}
 	return false;
     } else if (dir == "N"){
-	console.log("game array " + gameArray[i] + " dest " + dest);
 	while (i > dest){
 	    i = i - 10;
+	    console.log("game array " + gameArray[i] + " dest " + dest);
 	    if (i == dest){
 		return true;
 	    } else if (gameArray[i] != 'N') {
@@ -192,12 +194,13 @@ function isPathClear(source, dest, dir){
 	return false;
     } else if (dir == "S") { // dir == 'S'
 	while (i < dest){
-	    console.log("source " + source + " dest " + dest + " dir " + dir);
 	    i = i + 10;
+	    console.log("source " + source + " dest " + dest + " i " + i + " gameArray[i] " + gameArray[i]);
 	    if (i == dest){
 		console.log("true");
 		return true;
-	    } else if (gameArray[i] != 'N') {
+	    } 
+	    else if (gameArray[i] != 'N') {
 		console.log("false 1: gamearray[i] = " + gameArray[i]);
 		return false;
 	    }
@@ -354,15 +357,80 @@ function isValidMove(sourceID, destID){
     }
 }
 
+//return winning value
+//return N if tied
+function fight(sVal, dVal){
+    //Both are the same val
+    if (sVal == dVal){
+	return "N";
+    } 
+    //Flag - 0
+    else if (dVal == "0"){
+	capture = true;
+	return sVal;
+    }
+    //Spy - 1
+    else if (sVal == "1" || dVal == "1"){
+	if (sVal == "1" ){
+	    if (dVal == "10"){
+		return sVal;
+	    } else {
+		return dVal;
+	    }
+	}
+    }
+
+    //Bomb - 11
+    else if (dVal == "11"){
+	if (sVal == "3"){
+	    return sVal;
+	} else {
+	    return dVal;
+	}
+    }
+
+    //Regular
+    else {
+	//Source is greater and wins
+	if (sVal.substring(1) > dVal.substring(1){
+	    
+	//Dest is greater and wins
+	} else if (){
+
+	//Tie: both lose
+	} else {
+
+	}
+    }
+}
+
 function confirmOrReset(){
     $('#readyButton').html("<button type='button' onclick='confirm('yes')'>Confirm Move</button><button type='button' onclick='confirm('no')'>Reset</button>"); 
     //Change mbox message
     //Change button to confirm
 }
 
-function confirm(s,d){
-    console.log("confirm() s= " + s + " d " + d);
+function confirm(){
+    var s = $('#sourceLocation').html();
+    var d = $('#destLocation').html();
+    
+    var sTemp = s;
+    
+    var sVal = gameArray[s];
+    var dVal = gameArray[d];
+
+    //If dest is empty
+    if ( dVal == "N") {
+	gameArray[d] = sVal;
+	gameArray[s] = "N";
+    } else {
+	fight(sVal,dVal);
+	$("#container").append("<div id='fight_box'><h1>Fight!</h1><span><img src='../img/"+sVal+".png'> vs. <img src='../img/"+dVal+".png'></span></div>");
+    }
+
+    console.log("confirm() s = " + s + " d " + d + " sVal " + sVal + " dVal " + dVal);
     console.log(gameArray);
+    
 }
 
 $(document).ready(function(){
@@ -406,10 +474,8 @@ $(document).ready(function(){
 		} else {
 		    destLoc = temp[0];
 		}
-
 		if (isValidMove(sourceID, destID)){
 		    console.log("### sourceLoc " + sourceLoc + " destLoc " + destLoc);
-
 		    $("#sMsg").html("Confirm move?<br><span id='sourceLocation'>"
 				     + sourceLoc + "</span> -> <span id='destLocation'>"+destLoc+"</span>");
 		    $('#readyButton').html("<button type='button' onclick='confirm(" + sourceID + "," + destID +")'>Make Move</button><button type='button' onclick='location.reload()'>Reset</button>"); 
