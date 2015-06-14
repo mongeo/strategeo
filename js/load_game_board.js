@@ -40,7 +40,7 @@ function setVals() {
 
 function addBlues(){
    for (i = 61; i < 101; i++) {
-       $('#M' + i).html("<img src='../img/B.png' id='B' class='square'>");
+       $('#M' + i).html("<div id='B_"+i+"'><img src='../img/B.png' id='B_"+i+"' class='square clickable'></div>");
        //Change value of form element for post           
        $('#F' + i).val("B");
 
@@ -150,14 +150,12 @@ function isClickable(playerColor, pieceColor, click, target){
     return false;
 }
 
-
 //
 // Source location: 
 //
 function isPathClear(source, dest, dir){
     // Need to include obstructions store value as X
     // in gameArray 
-    console.log("source " + source + " dest " + dest + " dir " + dir);
     var i = source;
     if (dir == "W"){
 	while (i > dest){
@@ -194,9 +192,8 @@ function isPathClear(source, dest, dir){
 	return false;
     } else if (dir == "S") { // dir == 'S'
 	while (i < dest){
+	    console.log("source " + source + " dest " + dest + " dir " + dir);
 	    i = i + 10;
-	    console.log(gameArray);
-	    console.log("game array " + gameArray[i] + " dest " + dest + " i " + i);
 	    if (i == dest){
 		console.log("true");
 		return true;
@@ -333,9 +330,9 @@ function isValidMove(sourceID, destID){
     if (sourceID == destID){
 	return false;
     }
-
+    console.log("destValue = " + destValue);
     //Destination is empty
-    if (destValue == null){
+    if (destColor != sourceColor){
 	//Scout move
 	if (sourceRank != 2){
 	    if (isRegMove(sourceLocation, destLocation)){
@@ -364,7 +361,8 @@ function confirmOrReset(){
 }
 
 function confirm(s,d){
-    console.log("confirm() s= " + s + " d " + d)
+    console.log("confirm() s= " + s + " d " + d);
+    console.log(gameArray);
 }
 
 $(document).ready(function(){
@@ -373,7 +371,6 @@ $(document).ready(function(){
     var i = 1;//keeps track of source(1)/destination(2) click
     var sourceID = "";
     var sourceValue = "";
-
     if (state == 3){
 	//Clear game initialization data
 	$("#bPool").remove();
@@ -388,70 +385,54 @@ $(document).ready(function(){
 	var pieceColor = e.target.id.substring(0,1);
 	//Checks if clickable item 
 	if ($(e.target).hasClass('clickable') && isClickable(playerColor, pieceColor, i, e.target.id)){
+		$('.destSelected').css({"-webkit-filter" : "brightness(1)"});
+		$('.destSelected').removeClass('destSelected');
 	    if (i == 1){
 		//set target as source
 		sourceID = e.target.id;
-		var tempAarray = sourceID.split("_");
-		sourceValue = tempAarray[0];
+		var tempArray = sourceID.split("_");
+		sourceValue = tempArray[0];
+		sourceLoc = tempArray[1];
 		$('#sMsg').html("Click a destination");
                 $('#sImg').html("<img src='" + $(e.target).attr("src") + "'>");
 		i++;
 	    } else if (i == 2){
+		i = 1;
 		var destID = e.target.id;
 		var destLoc = "";
 		var temp = idParseToArray(destID);
 		if (temp.length > 1){
-		    destLoc = temp[1].substring(1);
+		    destLoc = temp[1];
 		} else {
-		    destLoc = temp[0].substring(1);
+		    destLoc = temp[0];
 		}
-		//check if valid move
+
 		if (isValidMove(sourceID, destID)){
-		    $("#sMsg").html("Confirm move: " + sourceValue + " to " + destLoc + "?");
-		    $('#readyButton').html("<button type='button' onclick='confirm(" + sourceID + "," + destID +")'>Make Move</button><button type='button' onclick='reset()'>Reset</button>"); 
-		    /*
-		    confirm = confirmMove(sourceID, destID);
-		    var elem = document.getElementById(sourceID);
-		    elem.parentNode.removeChild(elem);
-		    //Place source
-		    $('#' + destID).html("<img src='../img/"+ sourceValue +".png' id='"+ sourceValue +"l"+ destID  +"' class='clickable square'>");
+		    console.log("### sourceLoc " + sourceLoc + " destLoc " + destLoc);
 
-		    //Change value of form element for post
-		    $('#F' + destID.substring(1)).val(sourceValue);
-
-		    //Remove source selection image / msg
-		    $('#sImg').html("");
-		    $("#sMsg").html("");
-
-
-		    //Empty source and destination
-		    sourceID = "";
-		    sourceValue = "";
-		    destID = "";
-		    sourceImage = "";
-
-		    //Show ready button if all pieces are placed
-		    if (isReady()){
-			$('#readyButton').html("<input type='submit' value='Ready!'>"); 
-		    } else {
-			$('#readyButton').html("");
-		    }
-*/
+		    $("#sMsg").html("Confirm move?<br><span id='sourceLocation'>"
+				     + sourceLoc + "</span> -> <span id='destLocation'>"+destLoc+"</span>");
+		    $('#readyButton').html("<button type='button' onclick='confirm(" + sourceID + "," + destID +")'>Make Move</button><button type='button' onclick='location.reload()'>Reset</button>"); 
+		    $('#' + destID).addClass('destSelected');
+		    $('.destSelected').css({"-webkit-filter" : "brightness(.3)"});
+		    console.log("destLoc valid move: " + destLoc);
 		} else {
+		    console.log("destID not valid move: " + destID);
 		    //error
 		    $('#sMsg').html("Invalid destination"); 
+                    $('#sImg').html();
 		    //Restart to get new source
-		    i = 1;
-
+		    //i = 1;
+                    sourceID = "";
+		    sourceValue = "";                                                                                                 
+                    destID = "";
+		    sourceImage = "";
 		}
 	    }
 	}
     }, false);
 });
-
 /*
-
-
 	if ($(e.target).hasClass('clickable')){
 	    //Case 1: Source is empty / not a game piece 
 	    if (i == 1 && $(e.target).get(0).tagName != "IMG"){
@@ -505,4 +486,34 @@ $(document).ready(function(){
 	    }
 	}
 
+*/
+
+
+		    /*
+		    confirm = confirmMove(sourceID, destID);
+		    var elem = document.getElementById(sourceID);
+		    elem.parentNode.removeChild(elem);
+		    //Place source
+		    $('#' + destID).html("<img src='../img/"+ sourceValue +".png' id='"+ sourceValue +"l"+ destID  +"' class='clickable square'>");
+
+		    //Change value of form element for post
+		    $('#F' + destID.substring(1)).val(sourceValue);
+
+		    //Remove source selection image / msg
+		    $('#sImg').html("");
+		    $("#sMsg").html("");
+
+
+		    //Empty source and destination
+		    sourceID = "";
+		    sourceValue = "";
+		    destID = "";
+		    sourceImage = "";
+
+		    //Show ready button if all pieces are placed
+		    if (isReady()){
+			$('#readyButton').html("<input type='submit' value='Ready!'>"); 
+		    } else {
+			$('#readyButton').html("");
+		    }
 */
