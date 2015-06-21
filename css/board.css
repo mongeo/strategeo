@@ -194,23 +194,30 @@ button {
 }
 
 #fight_box {
-    position: relative;
+    position: absolute;
+    background-color: black;
+    border-radius: 15px;
     display: block;
-    background-color: white;
-    align: left;
-    height: 300px;
-    width: 400px;
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-left: auto;
-    margin-right: auto;
-    top: 25%;
-    z-index: 1;
+    -webkit-box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);
+    height: 540px;
+    width: 540px;
+    left: 230px;
+    top: 182px;
+    opacity: .95;
+    filter:alpha(opacity=95); /* For IE8 and earlier */
+    z-index: 5;
 }
 
-#vs {
-    display: inline;
-    verticle-align: middle;
+#fight_table {
+    color: white;
+    position: relative;
+    border-spacing: 25px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20%;
+    margin-right: auto;
+
 }
 
 .float {

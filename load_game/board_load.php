@@ -112,12 +112,15 @@ echo $divs;
 
 #
 # Create hidden form and append to h (f)
-# used to store placements in database
+# used to post data
 #
 $f = "";
-for ($i = 1; $i < 101; $i++){
-    $f .= "<input type='hidden' id='F" . $i . "' name='M" . $i . "' value=''>";
-}
+$f .= "<input type='hidden' id='sLoc' name='sLoc' value=''>";
+$f .= "<input type='hidden' id='dLoc' name='dLoc' value=''>";
+$f .= "<input type='hidden' id='sVal' name='sVal' value=''>";
+$f .= "<input type='hidden' id='dVal' name='dVal' value=''>";
+$f .= "<input type='hidden' id='rVal' name='rVal' value=''>";
+$f .= "<input type='hidden' id='gameArray' name='gameArray' value=''>";
 
 #
 # Header - Displays welcome message and ready button
@@ -127,7 +130,7 @@ $h = "<div id='header'>";
 $h .= "<h1>Stratego</h1>";
 $h .= "<br><div id='headerText'> Welcome <span id='user_name'>" . ucfirst($name) . "</span>! ";
 $h .= "Place your pieces on the board. Click ready when button appears ";
-$h .= "<form id='readyForm' action='post_join.php' method='POST'>";
+$h .= "<form id='readyForm' action='post_load.php' method='POST'>";
 $h .=  $f . "<div id='readyButton'></div></form></div></div>";
 
 #
