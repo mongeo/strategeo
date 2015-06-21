@@ -516,7 +516,6 @@ $(document).ready(function(){
 		    $('#readyButton').html("<button>Confirm Move</button><button type='button' onclick='location.reload()'>Reset</button>"); 
 		    $('#' + destID).addClass('destSelected');
 		    $('.destSelected').css({"-webkit-filter" : "brightness(.3)"});
-
 		} else {
 
 		    //error
