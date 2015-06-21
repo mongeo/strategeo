@@ -364,18 +364,30 @@ function fight(sVal, dVal){
     if (sVal == dVal){
 	return "N";
     } 
+    sCol = sVal.substring(0,1);
+    dCol = dVal.substring(0,1);
+    sVal = sVal.substring(1);
+    dVal = dVal.substring(1);
     //Flag - 0
-    else if (dVal == "0"){
+    if (dVal == "0"){
 	capture = true;
-	return sVal;
+	return sCol + sVal;
     }
     //Spy - 1
     else if (sVal == "1" || dVal == "1"){
 	if (sVal == "1" ){
+	    // Source Spy vs Destination Marshall
 	    if (dVal == "10"){
-		return sVal;
+		return sCal + sVal;
 	    } else {
-		return dVal;
+		return dCol + dVal;
+	    }
+	} else if (dVal == "1") {
+	    // Destination Spy vs Souce Marshall 
+	    if (sVal == "10"){
+		return dCol + dVal;
+	    } else {
+		return sCol + sVal;
 	    }
 	}
     }
@@ -383,23 +395,23 @@ function fight(sVal, dVal){
     //Bomb - 11
     else if (dVal == "11"){
 	if (sVal == "3"){
-	    return sVal;
+	    return sCol + sVal;
 	} else {
-	    return dVal;
+	    return dCol + dVal;
 	}
     }
 
     //Regular
     else {
 	//Source is greater and wins
-	if (sVal.substring(1) > dVal.substring(1){
-	    
+	if (sVal > dVal){
+	    return sCol + sVal;
 	//Dest is greater and wins
-	} else if (){
-
+	} else if (dVal > sVal){
+	    return dCol + dVal;
 	//Tie: both lose
 	} else {
-
+	    return "N";
 	}
     }
 }
@@ -418,14 +430,15 @@ function confirm(){
     
     var sVal = gameArray[s];
     var dVal = gameArray[d];
-
     //If dest is empty
     if ( dVal == "N") {
 	gameArray[d] = sVal;
 	gameArray[s] = "N";
     } else {
-	fight(sVal,dVal);
-	$("#container").append("<div id='fight_box'><h1>Fight!</h1><span><img src='../img/"+sVal+".png'> vs. <img src='../img/"+dVal+".png'></span></div>");
+	var res = fight(sVal,dVal);
+	var rColor = res.substring(0,1);
+	console.log("fight winner = " + res);
+	$("#container").append("<div id='fight_box'><h1>Fight!</h1><div id='vs'> <img src='../img/"+sVal+".png' class='float'/><span class='float'> vs. </span><img src='../img/"+dVal+".png' class='float' /></div><h2>"+rColor+" survives the battle</h2><img src='../img/"+res+".png'></div>");
     }
 
     console.log("confirm() s = " + s + " d " + d + " sVal " + sVal + " dVal " + dVal);
