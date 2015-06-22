@@ -73,7 +73,13 @@ $sColor = substr($sVal, 0,1);
 $dColor = substr($dVal, 0, 1);
 $rColor = substr($rVal, 0, 1);
 $gameArray = explode(",",$_POST['gameArray']);
-$move = "$sVal to $dLoc ($rVal occupies $dLoc)";
+$move = "$name moved piece on $sLoc to $dLoc";
+$win = false;
+if (intval(substr($dVal,1,2)) == 0){
+   $state = 5;
+   $win = true;
+}
+
 
 # Turn $_POST into comma seperated string
 # Use for red and blue views
