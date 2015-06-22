@@ -16,8 +16,8 @@ $bStr = base64_encode($_SESSION['boardString']);//use base64_decode to extract
 # Create new game in database
 # set state to 1 (created)
 #
-$gameInsert = "INSERT INTO GAME (red, state, lastMoveBy, boardStr, lastMoveRed) 
-	       VALUES ('$name','1','$name','$bStr','Created game')";
+$gameInsert = "INSERT INTO GAME (red, state, lastMoveBy, boardStr, lastMove) 
+	       VALUES ('$name','1','$name','$bStr','$name created game')";
 if (mysqli_query($conn, $gameInsert)) {
 } else {
     print "Failed to create game.<br>" . mysqli_error($conn);

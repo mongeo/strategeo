@@ -73,6 +73,7 @@ $sColor = substr($sVal, 0,1);
 $dColor = substr($dVal, 0, 1);
 $rColor = substr($rVal, 0, 1);
 $gameArray = explode(",",$_POST['gameArray']);
+$move = "$sVal to $dLoc ($rVal occupies $dLoc)";
 
 # Turn $_POST into comma seperated string
 # Use for red and blue views
@@ -100,7 +101,7 @@ $post_r_str = implode(',', $r_stack);
 # Update database new game in database
 #
 $gameUpdate = "UPDATE GAME 
-	       SET state='3', lastMoveBy='$name', lastMoveBlue='Joined Game' 
+	       SET lastMoveBy='$name', lastMoveBlue='Joined Game' 
 	       Where gameID='$gid'";
 if (!mysqli_query($conn, $gameUpdate)) {
     print "Failed to connect ot database and update game.<br>" . mysqli_error($conn);

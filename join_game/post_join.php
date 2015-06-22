@@ -70,7 +70,7 @@ if ($state == 0){
 # Update database new game in database
 #
 $gameUpdate = "UPDATE GAME 
-	       SET state='3', lastMoveBy='$name', lastMoveBlue='Joined Game' 
+	       SET state='3', lastMoveBy='$name', lastMove='$name joined Game' 
 	       Where gameID='$gid'";
 if (!mysqli_query($conn, $gameUpdate)) {
     print "Failed to connect ot database and update game.<br>" . mysqli_error($conn);

@@ -37,18 +37,17 @@ $state = "";
 $board = "";
 $lastMoveBy = "";
 $lastMoveTime = "";
-$lastMoveRed = "";
-$lastMoveBlue = "";
+$lastMove = "";
 $redPlayerView = "";
 $bluePlayerView = "";
 if ($gstmt = $conn->prepare(
-	"SELECT red, blue, state, boardStr, lastMoveBy, lastMoveTime, lastMoveRed, lastMoveBlue, redPlayerView, bluePlayerView
+	"SELECT red, blue, state, boardStr, lastMoveBy, lastMoveTime, lastMove, redPlayerView, bluePlayerView
 	 FROM GAME
 	 LEFT JOIN BOARD ON GAME.gameID=BOARD.gameID
 	 WHERE GAME.gameID=?")){
    $gstmt -> bind_param('i', $gid);
    $gstmt -> execute();
-   $gstmt -> bind_result($re, $bl, $s, $b, $lmby, $lmt, $lmred, $lmblue, $rpv, $bpv);
+   $gstmt -> bind_result($re, $bl, $s, $b, $lmby, $lmt, $lm, $rpv, $bpv);
    $gstmt -> fetch();
    $red = $re;
    $blue = $bl;
@@ -56,8 +55,7 @@ if ($gstmt = $conn->prepare(
    $board = $b;
    $lastMoveBy = $lmby;
    $lastMoveTime = $lmt;
-   $lastMoveRed = $lmred;
-   $lastMoveBlue = $lmblue;
+   $lastMove = $lm;
    $redPlayerView = $rpv;
    $bluePlayerView = $bpv;
    $gstmt -> close();
@@ -158,13 +156,7 @@ $sPhase .= "</div>";
 $sLastMove = "<div id='sLastMove'>";
 $sLastMove .= "<b>Last Move:</b><br>";//Last Move:
 $sLastMove .= "By " . ucfirst($lastMoveBy) . "<br>";//By Geoff
-if ($color == "Red"){
-   $sLastMove .= "$lastMoveRed <br>";//R41 -> R51
-} elseif ($color == "Blue") {
-   $sLastMove .= "$lastMoveBlue <br>";//R41 -> R51
-} else {
-   $sLastMove .= "$color <br>";
-}
+$sLastMove .= "$lastMove <br>";//R41 -> R51
 $sLastMove .= "$lastMoveTime <br>";
 $sLastMove .= "</div>";
 
