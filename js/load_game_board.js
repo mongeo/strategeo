@@ -276,11 +276,11 @@ function isRegMove(source, dest){
     //Vertical
     else if (dCol == sCol){
 	//Top
-	if (dest = source - 10){
+	if (dest == source - 10){
 	    return true;
 	}
 	//Down
-	else if (dest = source + 10) {
+	else if (dest == source + 10) {
 	    return true;
 	}
 	
@@ -327,7 +327,9 @@ function isValidMove(sourceID, destID){
     if (destColor != sourceColor){
 	//Scout move
 	if (sourceRank != 2){
+	    console.log("regmove");
 	    if (isRegMove(sourceLocation, destLocation)){
+		console.log("isregmove : " + isRegMove(sourceLocation, destLocation));
 		return true;
 	    } else {
 		return false;
@@ -507,7 +509,7 @@ $(document).ready(function(){
 		    destLoc = temp[0];
 		}
 		if (isValidMove(sourceID, destID)){
-
+		    console.log("s" + sourceID + "d" + destID)
 		    $("#sMsg").html("Confirm move?<br><span id='sourceLocation'>"
 				     + sourceLoc + "</span> -> <span id='destLocation'>"+destLoc+"</span>");
 		    $("#readyForm").submit(function(){

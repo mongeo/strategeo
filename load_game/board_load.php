@@ -129,7 +129,7 @@ $f .= "<input type='hidden' id='gameArray' name='gameArray' value=''>";
 $h = "<div id='header'>";
 $h .= "<h1>Stratego</h1>";
 $h .= "<br><div id='headerText'> Welcome <span id='user_name'>" . ucfirst($name) . "</span>! ";
-$h .= "Place your pieces on the board. Click ready when button appears ";
+$h .= "Move your piece and confirm move when button appears.  ";
 $h .= "<form id='readyForm' action='post_load.php' method='POST'>";
 $h .=  $f . "<div id='readyButton'></div></form></div></div>";
 
