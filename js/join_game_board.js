@@ -19,13 +19,11 @@ function isPlaceable(destID){
 } 
 
 function isReady(){
-    /* commented out for testing purposes
     for (i = 0; i < 40; i++){
-	if ($.trim($("#rS" + i).html()) != ''){
+	if ($.trim($("#bS" + i).html()) != ''){
 	    return false;
 	}
     }
-    */
     return true;
 }
 
