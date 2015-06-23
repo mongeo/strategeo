@@ -1,5 +1,7 @@
 <?php
 ini_set('display_errors', 1);
+var_dump($_POST);
+exit();
 
 # Authenticate user
 session_start();
@@ -70,16 +72,18 @@ $sVal = $_POST['sVal'];
 $dVal = $_POST['dVal'];
 $rVal =  $_POST['rVal'];
 $sColor = substr($sVal, 0,1);
-$dColor = substr($dVal, 0, 1);
-$rColor = substr($rVal, 0, 1);
 $gameArray = explode(",",$_POST['gameArray']);
-$move = "$name moved piece on $sLoc to $dLoc";
-$win = false;
-if (intval(substr($dVal,1,2)) == 0){
+$move = "";
+$fight = false;
+if (intval(substr($dVal,1,2)) == "0"){
    $state = 5;
-   $win = true;
+   $move = "$name captured the flag!";
+} elseif ($dVal == "N"){
+   $move = "$sLoc to $dLoc";
+} else {
+   $fight = true;
+   $move = "$sVal @ $sLoc to $dVal @ $dLoc";
 }
-
 
 # Turn $_POST into comma seperated string
 # Use for red and blue views
@@ -99,21 +103,24 @@ foreach($gameArray as $value){
 }
 $post_b_str = implode(',', $b_stack);
 $post_r_str = implode(',', $r_stack);
-#$post_Str = base64_encode($post_Str);
-
-
 
 #
 # Update database new game in database
 #
+if ($state == 4){
 $gameUpdate = "UPDATE GAME 
-	       SET lastMoveBy='$name', lastMoveBlue='Joined Game' 
+	       SET lastMoveBy='$name', lastMove='$name' 
 	       Where gameID='$gid'";
+} else {
+$gameUpdate = "UPDATE GAME 
+	       SET lastMoveBy='$name', lastMove='$move', winner='$name' 
+	       Where gameID='$gid'";
+}
+
 if (!mysqli_query($conn, $gameUpdate)) {
     print "Failed to connect ot database and update game.<br>" . mysqli_error($conn);
     print "<br><a href='../user/index.php'>Return to your home page</a>";
 }
-
 
 #
 # Insert red values into BOARD
@@ -133,8 +140,48 @@ $binstmt -> close();
 $_SESSION['gid'] = '';
 unset($_SESSION['gid']);
 
-print "You have joined the game with $red successfully! ";
-print "Redirecting in 3 seconds. . . ";
-print "<br><br><a href='../user/index.php'>Home</a> ";
-header("refresh:3;url=../user/index.php");
+
+$res = "<div id='fight_box'>";
+$res .= "<table id='fight_table'>";
+
+
+if ($fight == true){
+   $res .= "<tr><td><img src='../img/".$sVal.".png'></td>";
+   $res .= "<td><h3> vs. </h3></td>";
+   $res .= "<td><img src='../img/".$dVal.".png'></td></tr>";
+   $res .= "<tr><td colspan='3'><h3>".$rVal." survives the battle</h3></td></tr>";
+} elseif ($state == 4){
+   $res .= "<tr><td><h2>Move Results: </h2></td></tr>";
+   $res .= "<tr><td align='center'><img src='../img/".$sVal.".png'></td>";
+   $res .= "<tr><td><h3> $sVal moved to space $sLoc </h3></td></tr>";
+} elseif ($state == 5){
+   $res .= "<tr><td><h2>Move Results: </h2></td></tr>";
+   $res .= "<tr><td align='center'><img src='../img/".$sVal.".png'></td>";
+   $res .= "<tr><td><h3>Congratulations $name! $sVal captures the flag! You are the winner!</h3></td></tr>";
+}
+$res .= "</table></div>";
+
+$msg = "<pre>Your move was posted successfully! ";
+$msg .= "<br><br><a href='../user/index.php'>Home</a></pre>";
+
+#
+# Top html (htmlT) - Adds beginning html code
+#
+$htmlT = "<!DOCTYPE html><html lang='en'><head>";
+$htmlT .= "<link rel='stylesheet' type='text/css' href='../css/board.css'>";
+$htmlT .= "<script src='../js/jquery-1.11.2.js'></script>";
+$htmlT .= "<script src='../js/load_game_board.js'></script>";
+$htmlT .= "</head>";
+$htmlT .= "<body>";
+$htmlT .= "<div id='container'>";
+
+#
+# Bottom html - Adds ending html code
+#
+$htmlB = "</div>";
+$htmlB .= "</body>";
+$htmlB .= "</html>";
+
+print $htmlT . $res . $msg . $htmlB;
+header("refresh:10;url=../user/index.php");
 ?>

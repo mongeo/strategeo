@@ -51,7 +51,6 @@ foreach($_POST as $key => $value){
    array_push($r_stack, "$value");
 }
 $post_r_str = implode(',', $r_stack);
-#$post_Str = base64_encode($post_Str);
 
 #
 # Insert red values into BOARD
@@ -61,9 +60,6 @@ $binstmt = $conn->prepare("INSERT INTO BOARD (gameID, redPlayerView) VALUES (?,?
 $binstmt -> bind_param('is', $gidval, $post_r_str);
 $binstmt -> execute();
 $binstmt -> close();
-
-#debug
-#print_r($_POST);
 
 # Unset boardString
 $_SESSION['boardString'] = '';

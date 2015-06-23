@@ -444,27 +444,7 @@ function confirm(){
 	gameArray[d] = res;
 	toForm(s,d,sVal,dVal,res);
     }
-
-/*    if ( dVal == "N") {
-	gameArray[d] = sVal;
-	gameArray[s] = "N";
-	$("#container").append("<div id='fight_box'><table id='fight_table'><tr><td><h2>Move Results: </h2></td></tr>" +
-			       "<tr><td align='center'><img src='../img/"+sVal+".png'></td>" +
-			       "<tr><td><h3>"+sVal+" moved to space "+s+"</h3></td></tr></table></div>");
-    } else {
-	var res = fight(sVal,dVal);
-	var rColor = res.substring(0,1);
-
-	$("#container").append("<div id='fight_box'><table id='fight_table'><tr><td colspan='3'><h2>Move Results: </h2></td></tr>" +
-			       "<tr><td><img src='../img/"+sVal+".png'></td>" +
-			       "<td><h3> vs. </h3></td>" +
-			       "<td><img src='../img/"+dVal+".png'></td></tr>" +
-			       "<tr><td colspan='3'><h3>"+rColor+" survives the battle</h3></td></tr></table></div>");
-    }
-*/
-    console.log("confirm() s = " + s + " d " + d + " sVal " + sVal + " dVal " + dVal);
-
-    
+    console.log("confirm() s = " + s + " d " + d + " sVal " + sVal + " dVal " + dVal);    
 }
 
 $(document).ready(function(){
@@ -485,7 +465,7 @@ $(document).ready(function(){
     document.addEventListener('click', function(e) {
 
 	var pieceColor = e.target.id.substring(0,1);
-	//Checks if clickable item 
+	/* Checks if clickable item */ 
 	if ($(e.target).hasClass('clickable') && isClickable(playerColor, pieceColor, i, e.target.id)){
 		$('.destSelected').css({"-webkit-filter" : "brightness(1)"});
 		$('.destSelected').removeClass('destSelected');
@@ -503,6 +483,7 @@ $(document).ready(function(){
 		var destID = e.target.id;
 		var destLoc = "";
 		var temp = idParseToArray(destID);
+		console.log(destID);
 		if (temp.length > 1){
 		    destLoc = temp[1];
 		} else {

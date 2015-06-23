@@ -67,7 +67,7 @@ $(document).ready(function(){
 	    }
 	    //Case 2: Source is not empty / is a game piece
 	    else if (i == 1){
-		temp = e.target.id.split("l");
+		temp = e.target.id.split("_");
 		sourceID = e.target.id;
 		sourceValue = temp[0];
 		sourceParent = $(e.target).parent();//
@@ -84,7 +84,7 @@ $(document).ready(function(){
 		    elem.parentNode.removeChild(elem);
 		    //Place source
 		    //$('#' + destination).html(sourceImage); 
-		    $('#' + destination).html("<img src='../img/"+ sourceValue +".png' id='"+ sourceValue +"l"+ destination  +"' class='clickable square'>");
+		    $('#' + destination).html("<img src='../img/"+ sourceValue +".png' id='"+ sourceValue +"_"+ destination  +"' class='clickable square'>");
 
 		    //Change value of form element for post
 		    $('#F' + destination.substring(1)).val(sourceValue);

@@ -34,7 +34,7 @@ while($i < 101){
         } else if ($i == 54 || $i == 58){
            $b .= "<td background='../img/L4.png'><div id='M".$i."' class='square lake'></div></td>";
         } else {
-           $b .= "<td background='../img/T" . rand(1,3). ".png' id='M".$i."'><div id='M".$i."' class='clickable square'></div></td>";
+           $b .= "<td background='../img/T" . rand(1,3). ".png' id='B".$i."'><div id='M".$i."' class='clickable square'></div></td>";
         }
         $i++;
         if($i % 10 == 1){
@@ -53,7 +53,7 @@ while($i < 40){
               $rP .= "<tr>";
         }
         $rP .= "<td><div id='rS" . $i  . "' class='clickable square'>";
-        $rP .= "<img src='../img/R" . $reds[$i] . ".png' id='R".$reds[$i]."l".$i."' class='clickable square'>";
+        $rP .= "<img src='../img/R" . $reds[$i] . ".png' id='R".$reds[$i]."_".$i."' class='clickable square'>";
         $rP .= "</div></td>";
 
         $i++;
@@ -73,7 +73,7 @@ while($i < 40){
               $bP .= "<tr>";
         }
         $bP .= "<td><div id='bS" . $i  . "' class='clickable square'>";
-        $bP .= "<img src='../img/B" . $blues[$i] . ".png' id='B".$blues[$i]."l".$i."' class='clickable square'>";
+        $bP .= "<img src='../img/B" . $blues[$i] . ".png' id='B".$blues[$i]."_".$i."' class='clickable square'>";
         $bP .= "</div></td>";
 
         $i++;
@@ -139,12 +139,6 @@ $sSignout .= "</div>";
 #Combines sidebar string
 $rSide .= $sImg . $sMsg . $sPhase . $sLastMove . $sSignout;
 $rSide .= "</div>";
-
-#
-# Demarcation lines - spaces between pools and board
-#
-$rLine = "<div id='rLine'>Red Zone</div>";
-$bLine = "<div id='bLine'>Blue Zone</div>";
 
 # 
 # Top html (htmlT) - Adds beginning html code

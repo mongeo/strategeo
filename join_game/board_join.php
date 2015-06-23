@@ -128,12 +128,6 @@ $side .= $sImg . $sMsg . $sPhase . $sLastMove . $sSignout;
 $side .= "</div>";
 
 #
-# Demarcation lines - spaces between pools and board
-#
-$rLine = "<div id='rLine'>Red Zone</div>";
-$bLine = "<div id='bLine'>Blue Zone</div>";
-
-#
 # Top html (htmlT) - Adds beginning html code
 #
 $htmlT = "<!DOCTYPE html><html lang='en'><head>";
