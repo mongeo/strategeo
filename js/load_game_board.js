@@ -20,13 +20,11 @@ function isPlaceable(destID){
 } 
 
 function isReady(){
-    /* commented out for testing purposes
     for (i = 0; i < 40; i++){
 	if ($.trim($("#rS" + i).html()) != ''){
 	    return false;
 	}
     }
-    */
     return true;
 }
 
@@ -467,8 +465,9 @@ $(document).ready(function(){
 	var pieceColor = e.target.id.substring(0,1);
 	/* Checks if clickable item */ 
 	if ($(e.target).hasClass('clickable') && isClickable(playerColor, pieceColor, i, e.target.id)){
-		$('.destSelected').css({"-webkit-filter" : "brightness(1)"});
-		$('.destSelected').removeClass('destSelected');
+	    //$('.destSelected').css({"-webkit-filter" : "brightness(1)"});
+	    $('.destSelected').removeAttr("style");
+	    $('.destSelected').removeClass('destSelected');
 	    if (i == 1){
 		//set target as source
 		sourceID = e.target.id;
@@ -481,6 +480,7 @@ $(document).ready(function(){
 	    } else if (i == 2){
 		i = 1;
 		var destID = e.target.id;
+		var mask = "B" + e.target.id.substring(1);
 		var destLoc = "";
 		var temp = idParseToArray(destID);
 		console.log(destID);
@@ -497,8 +497,9 @@ $(document).ready(function(){
 			confirm(sourceID,destID);
 		    });
 		    $('#readyButton').html("<button>Confirm Move</button><button type='button' onclick='location.reload()'>Reset</button>"); 
-		    $('#' + destID).addClass('destSelected');
-		    $('.destSelected').css({"-webkit-filter" : "brightness(.3)"});
+		    $('#' + mask).addClass('destSelected');
+		    $('.destSelected').css('-webkit-filter', 'brightness(.3)');
+		    //$('.destSelected').css("background-image", "url('../img/R.png')");
 		} else {
 
 		    //error

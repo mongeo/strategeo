@@ -94,16 +94,15 @@ if ($name == $red){
 $red_pieces = explode(',', $redPlayerView);
 $blue_pieces = explode(',', $bluePlayerView);
 $divs = "";
-for ($i = 0; $i < 100; $i++){
-    $n = $i + 1;
+for ($i = 1; $i < 101; $i++){
     if (strlen($red_pieces[$i]) > 1){
-       $divs .= "<div id='T$n' class='hidden'>$red_pieces[$i]</div>";
+       $divs .= "<div id='T$i' class='hidden'>$red_pieces[$i]</div>";
     } elseif (strlen($blue_pieces[$i]) > 1){
-       $divs .= "<div id='T$n' class='hidden'>$blue_pieces[$i]</div>";
+       $divs .= "<div id='T$i' class='hidden'>$blue_pieces[$i]</div>";
     } elseif ($red_pieces[$i] == 'X') { //Should be the same in either red or blue view
-       $divs .= "<div id='T$n' class='hidden'>X</div>";
+       $divs .= "<div id='T$i' class='hidden'>X</div>";
     } else {
-       $divs .= "<div id='T$n' class='hidden'>N</div>";
+       $divs .= "<div id='T$i' class='hidden'>N</div>";
     }
 }
 echo $divs;

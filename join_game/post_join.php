@@ -79,6 +79,7 @@ if (!mysqli_query($conn, $gameUpdate)) {
 
 # Turn $_POST into comma seperated string
 $b_stack = [];
+array_push($b_stack, "Error: Don't use 0");
 foreach($_POST as $key => $value){
    $k = intval(substr($key, 1));
    if ($k == 43 || $k == 44 || $k == 47 || $k == 48 || $k == 53 || $k == 54 || $k == 57 || $k == 58){

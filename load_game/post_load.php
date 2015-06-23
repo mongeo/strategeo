@@ -1,7 +1,7 @@
 <?php
 ini_set('display_errors', 1);
-var_dump($_POST);
-exit();
+#var_dump($_POST);
+#exit();
 
 # Authenticate user
 session_start();
@@ -75,7 +75,7 @@ $sColor = substr($sVal, 0,1);
 $gameArray = explode(",",$_POST['gameArray']);
 $move = "";
 $fight = false;
-if (intval(substr($dVal,1,2)) == "0"){
+if ($dVal == "R0" || $dVal == "B0"){
    $state = 5;
    $move = "$name captured the flag!";
 } elseif ($dVal == "N"){
@@ -84,6 +84,8 @@ if (intval(substr($dVal,1,2)) == "0"){
    $fight = true;
    $move = "$sVal @ $sLoc to $dVal @ $dLoc";
 }
+
+print "<pre>$state</pre>";
 
 # Turn $_POST into comma seperated string
 # Use for red and blue views
@@ -104,16 +106,20 @@ foreach($gameArray as $value){
 $post_b_str = implode(',', $b_stack);
 $post_r_str = implode(',', $r_stack);
 
+
+#var_dump($state);
+#exit();
+
 #
 # Update database new game in database
 #
 if ($state == 4){
 $gameUpdate = "UPDATE GAME 
-	       SET lastMoveBy='$name', lastMove='$name' 
+	       SET lastMoveBy='$name', lastMove='$name', state='$state' 
 	       Where gameID='$gid'";
 } else {
 $gameUpdate = "UPDATE GAME 
-	       SET lastMoveBy='$name', lastMove='$move', winner='$name' 
+	       SET lastMoveBy='$name', lastMove='$move', state='$state', winner='$name' 
 	       Where gameID='$gid'";
 }
 
