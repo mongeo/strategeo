@@ -159,7 +159,8 @@ $sPhase .= "</div>";
 $sLastMove = "<div id='sLastMove'>";
 $sLastMove .= "<b>Last Move:</b><br>";
 $sLastMove .= "By " . ucfirst($lastMoveBy) . "<br>";
-$sLastMove .= "$lastMove @:<br>";
+$sLastMove .= "$lastMove<br>";
+$sLastMove .= "@<br>";
 $sLastMove .= "$lastMoveTime <br>";
 $sLastMove .= "</div>";
 
