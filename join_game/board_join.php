@@ -35,13 +35,17 @@ require "../php_includes/db_connect.php";
 #
 $board = "";
 $state = "";
-if ($gstmt = $conn->prepare("SELECT boardStr, state FROM GAME  WHERE gameID=?")){
+$red = "";
+$time = "";
+if ($gstmt = $conn->prepare("SELECT red, boardStr, state, lastMoveTime FROM GAME  WHERE gameID=?")){
    $gstmt -> bind_param('i', $gid);
    $gstmt -> execute();
-   $gstmt -> bind_result($b, $s);
+   $gstmt -> bind_result($r, $b, $s, $t);
    $gstmt -> fetch();
    $board = $b;
    $state = $s;
+   $red = $r;
+   $time = $t;
    $gstmt -> close();
 } else {
   echo "Couldn't connect<br> " . mysqli_error($conn);
@@ -63,7 +67,7 @@ if ($state == 0){
 #  set state to 2 (Blue's selection) and add blue's name 
 #
 $gameUpdate = "UPDATE GAME 
-	       SET blue='$name', state='2' 
+	       SET blue='$name', state='2', lastMove='$name joined game', lastMoveBy='$name' 
 	       WHERE gameID='$gid'";
 if (!mysqli_query($conn, $gameUpdate)) {
     echo "Failed to join game.<br>" . mysqli_error($conn);
@@ -107,20 +111,21 @@ $sMsg .= "</div>";
 
 #Displays current phase of the game
 $sPhase = "<div id='sPhase'>";
-$sPhase .= "<b>Phase:</b><br>Game creation";
+$sPhase .= "<b>Phase:</b><br>Join Game";
 $sPhase .= "</div>";
 
 #Displays last move information
 $sLastMove = "<div id='sLastMove'>";
-$sLastMove .= "<b></b><br>";//Last Move:
-$sLastMove .= "<br>";//By Geoff
-$sLastMove .= "<br>";//R41 -> R51
-$sLastMove .= "";//@ 6/1/2015 2pm PST
+$sLastMove .= "<b>Last Move: </b><br>";
+$sLastMove .= "By " . ucfirst($red)."<br>";
+$sLastMove .= ucfirst($red) . " created game<br>";
+$sLastMove .= "$time";
 $sLastMove .= "</div>";
 
 #Logs off user
 $sSignout = "<div id='sSignout'>";
-$sSignout .= "<a href='../user/logout.php'>Logout</a>";
+$sSignout .= "<form action='../user/logout.php' method='POST'>";
+$sSignout .= "<button id='logout' value='logout' name='logout'>Logout</button></form>";	
 $sSignout .= "</div>";
 
 #Combines sidebar string

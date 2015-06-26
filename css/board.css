@@ -203,7 +203,7 @@ button {
     height: 540px;
     width: 540px;
     left: 230px;
-    top: 182px;
+    top: 0px;
     opacity: .95;
     filter:alpha(opacity=95); /* For IE8 and earlier */
     z-index: 5;

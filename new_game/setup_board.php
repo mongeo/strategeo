@@ -133,7 +133,8 @@ $sLastMove .= "</div>";
 
 #Logs off user
 $sSignout = "<div id='sSignout'>";
-$sSignout .= "<a href='../user/logout.php'>Logout</a>";
+$sSignout .= "<form action='../user/logout.php' method='POST'>";
+$sSignout .= "<button id='logout' value='logout' name='logout'>Logout</button></form>";
 $sSignout .= "</div>";
 
 #Combines sidebar string

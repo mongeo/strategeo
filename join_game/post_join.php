@@ -66,11 +66,13 @@ if ($state == 0){
    exit();
 }
 
+
+$ucn = ucfirst($name);
 #
 # Update database new game in database
 #
 $gameUpdate = "UPDATE GAME 
-	       SET state='3', lastMoveBy='$name', lastMove='$name joined Game' 
+	       SET state='3', lastMoveBy='$name', lastMove='$ucn joined game' 
 	       Where gameID='$gid'";
 if (!mysqli_query($conn, $gameUpdate)) {
     print "Failed to connect ot database and update game.<br>" . mysqli_error($conn);

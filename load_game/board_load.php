@@ -76,6 +76,10 @@ if ($state == 0){
    print "Error?";
 }
 
+#var_dump($redPlayerView);
+#var_dump($bluePlayerView);
+#exit();
+
 # Get current color
 $color = "";
 if ($name == $red){
@@ -147,32 +151,27 @@ $sMsg .= "</div>";
 
 #Displays current phase of the game
 $sPhase = "<div id='sPhase'>";
-$sPhase .= "<b>Game State (<span id='state_num'>$state</span>)</b>";
-$sPhase .= "<br><span id='player_color'>$color</span> Player's Move (".ucfirst($name).")";
+$sPhase .= "<b>Game State (<span id='state_num'>$state</span>)</b><br>";
+$sPhase .= ucfirst($name) . "'s Move <span id='player_color'>".$color."</span>";
 $sPhase .= "</div>";
 
 #Displays last move information
 $sLastMove = "<div id='sLastMove'>";
-$sLastMove .= "<b>Last Move:</b><br>";//Last Move:
-$sLastMove .= "By " . ucfirst($lastMoveBy) . "<br>";//By Geoff
-$sLastMove .= "$lastMove <br>";//R41 -> R51
+$sLastMove .= "<b>Last Move:</b><br>";
+$sLastMove .= "By " . ucfirst($lastMoveBy) . "<br>";
+$sLastMove .= "$lastMove <br>";
 $sLastMove .= "$lastMoveTime <br>";
 $sLastMove .= "</div>";
 
 #Logs off user
 $sSignout = "<div id='sSignout'>";
-$sSignout .= "<a href='../user/logout.php'>Logout</a>";
+$sSignout .= "<form action='../user/logout.php' method='POST'>";
+$sSignout .= "<button id='logout' value='logout' name='logout'>Logout</button></form>";
 $sSignout .= "</div>";
 
 #Combines sidebar string
 $side .= $sImg . $sMsg . $sPhase . $sLastMove . $sSignout;
 $side .= "</div>";
-
-#
-# Demarcation lines - spaces between pools and board
-#
-$rLine = "<div id='rLine'>Red Zone</div>";
-$bLine = "<div id='bLine'>Blue Zone</div>";
 
 #
 # Top html (htmlT) - Adds beginning html code
@@ -197,7 +196,7 @@ $bg = "<div id='board_border'></div>";
 #
 # Prints entire string for the board
 #
-$bGBStr = $htmlT . $h . base64_decode($board) . $side . $rLine . $bLine . $bg . $htmlB;
+$bGBStr = $htmlT . $h . base64_decode($board) . $side . $bg . $htmlB;
 echo $bGBStr;
 
 $_SESSION['gid'] = $gid;

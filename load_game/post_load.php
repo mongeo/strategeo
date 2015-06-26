@@ -85,8 +85,6 @@ if ($dVal == "R0" || $dVal == "B0"){
    $move = "$sVal @ $sLoc to $dVal @ $dLoc";
 }
 
-print "<pre>$state</pre>";
-
 # Turn $_POST into comma seperated string
 # Use for red and blue views
 $b_stack = [];
@@ -124,7 +122,7 @@ $gameUpdate = "UPDATE GAME
 }
 
 if (!mysqli_query($conn, $gameUpdate)) {
-    print "Failed to connect ot database and update game.<br>" . mysqli_error($conn);
+    print "Failed to connect to database and update game.<br>" . mysqli_error($conn);
     print "<br><a href='../user/index.php'>Return to your home page</a>";
 }
 
@@ -151,24 +149,30 @@ $res = "<div id='fight_box'>";
 $res .= "<table id='fight_table'>";
 
 
-if ($fight == true){
+if ($fight == true && substr($sVal,1) == substr($dVal,1)) {
+   $res .= "<tr><td><img src='../img/".$sVal.".png'></td>";
+   $res .= "<td><h3> vs. </h3></td>";
+   $res .= "<td><img src='../img/".$dVal.".png'></td></tr>";
+   $res .= "<tr><td colspan='3'><h3>Both pieces perish in the battle</h3></td></tr>";
+   $res .= "<tr><td colspan='3'><a href='../user/welcome.php'>Home</a></td></tr>";
+} elseif ($fight == true){
    $res .= "<tr><td><img src='../img/".$sVal.".png'></td>";
    $res .= "<td><h3> vs. </h3></td>";
    $res .= "<td><img src='../img/".$dVal.".png'></td></tr>";
    $res .= "<tr><td colspan='3'><h3>".$rVal." survives the battle</h3></td></tr>";
+   $res .= "<tr><td colspan='3'><a href='../user/welcome.php'>Home</a></td></tr>";
 } elseif ($state == 4){
    $res .= "<tr><td><h2>Move Results: </h2></td></tr>";
    $res .= "<tr><td align='center'><img src='../img/".$sVal.".png'></td>";
    $res .= "<tr><td><h3> $sVal moved to space $sLoc </h3></td></tr>";
+   $res .= "<tr><td><a href='../user/welcome.php'>Home</a></td></tr>";
 } elseif ($state == 5){
    $res .= "<tr><td><h2>Move Results: </h2></td></tr>";
    $res .= "<tr><td align='center'><img src='../img/".$sVal.".png'></td>";
    $res .= "<tr><td><h3>Congratulations $name! $sVal captures the flag! You are the winner!</h3></td></tr>";
+   $res .= "<tr><td><a href='../user/welcome.php'>Home</a></td></tr>";
 }
 $res .= "</table></div>";
-
-$msg = "<pre>Your move was posted successfully! ";
-$msg .= "<br><br><a href='../user/index.php'>Home</a></pre>";
 
 #
 # Top html (htmlT) - Adds beginning html code
@@ -176,7 +180,6 @@ $msg .= "<br><br><a href='../user/index.php'>Home</a></pre>";
 $htmlT = "<!DOCTYPE html><html lang='en'><head>";
 $htmlT .= "<link rel='stylesheet' type='text/css' href='../css/board.css'>";
 $htmlT .= "<script src='../js/jquery-1.11.2.js'></script>";
-$htmlT .= "<script src='../js/load_game_board.js'></script>";
 $htmlT .= "</head>";
 $htmlT .= "<body>";
 $htmlT .= "<div id='container'>";
@@ -188,6 +191,6 @@ $htmlB = "</div>";
 $htmlB .= "</body>";
 $htmlB .= "</html>";
 
-print $htmlT . $res . $msg . $htmlB;
+print $htmlT . $res . $htmlB;
 header("refresh:10;url=../user/index.php");
 ?>
