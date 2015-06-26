@@ -153,24 +153,24 @@ if ($fight == true && substr($sVal,1) == substr($dVal,1)) {
    $res .= "<tr><td><img src='../img/".$sVal.".png'></td>";
    $res .= "<td><h3> vs. </h3></td>";
    $res .= "<td><img src='../img/".$dVal.".png'></td></tr>";
-   $res .= "<tr><td colspan='3'><h3>Both pieces perish in the battle</h3></td></tr>";
-   $res .= "<tr><td colspan='3'><a href='../user/welcome.php'>Home</a></td></tr>";
+   $res .= "<tr><td colspan='3' align='center'><h3>Both pieces perish in the battle</h3></td></tr>";
+   $res .= "<tr><td colspan='3' align='center'><a href='../user/welcome.php'>Home</a></td></tr>";
 } elseif ($fight == true){
    $res .= "<tr><td><img src='../img/".$sVal.".png'></td>";
    $res .= "<td><h3> vs. </h3></td>";
    $res .= "<td><img src='../img/".$dVal.".png'></td></tr>";
-   $res .= "<tr><td colspan='3'><h3>".$rVal." survives the battle</h3></td></tr>";
-   $res .= "<tr><td colspan='3'><a href='../user/welcome.php'>Home</a></td></tr>";
+   $res .= "<tr><td colspan='3' align='center'><h3>".$rVal." survives the battle</h3></td></tr>";
+   $res .= "<tr><td colspan='3' align='center'><a href='../user/welcome.php'>Home</a></td></tr>";
 } elseif ($state == 4){
    $res .= "<tr><td><h2>Move Results: </h2></td></tr>";
    $res .= "<tr><td align='center'><img src='../img/".$sVal.".png'></td>";
-   $res .= "<tr><td><h3> $sVal moved to space $sLoc </h3></td></tr>";
-   $res .= "<tr><td><a href='../user/welcome.php'>Home</a></td></tr>";
+   $res .= "<tr><td align='center'><h3> $sVal moved to space $sLoc </h3></td></tr>";
+   $res .= "<tr><td align='center'><a href='../user/welcome.php'>Home</a></td></tr>";
 } elseif ($state == 5){
    $res .= "<tr><td><h2>Move Results: </h2></td></tr>";
    $res .= "<tr><td align='center'><img src='../img/".$sVal.".png'></td>";
-   $res .= "<tr><td><h3>Congratulations $name! $sVal captures the flag! You are the winner!</h3></td></tr>";
-   $res .= "<tr><td><a href='../user/welcome.php'>Home</a></td></tr>";
+   $res .= "<tr><td align='center'><h3>Congratulations $name! $sVal captures the flag! You are the winner!</h3></td></tr>";
+   $res .= "<tr><td align='center'><a href='../user/welcome.php'>Home</a></td></tr>";
 }
 $res .= "</table></div>";
 
@@ -192,5 +192,5 @@ $htmlB .= "</body>";
 $htmlB .= "</html>";
 
 print $htmlT . $res . $htmlB;
-header("refresh:10;url=../user/index.php");
+#header("refresh:10;url=../user/index.php");
 ?>
