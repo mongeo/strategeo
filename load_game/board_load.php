@@ -100,13 +100,13 @@ $blue_pieces = explode(',', $bluePlayerView);
 $divs = "";
 for ($i = 1; $i < 101; $i++){
     if (strlen($red_pieces[$i]) > 1){
-       $divs .= "<div id='T$i' class='hidden'>$red_pieces[$i]</div>";
+       $divs .= "<div id='T$i' class='hidden' style='display:none'>$red_pieces[$i]</div>";
     } elseif (strlen($blue_pieces[$i]) > 1){
-       $divs .= "<div id='T$i' class='hidden'>$blue_pieces[$i]</div>";
+       $divs .= "<div id='T$i' class='hidden' style='display:none'>$blue_pieces[$i]</div>";
     } elseif ($red_pieces[$i] == 'X') { //Should be the same in either red or blue view
-       $divs .= "<div id='T$i' class='hidden'>X</div>";
+       $divs .= "<div id='T$i' style='display:none'>X</div>";
     } else {
-       $divs .= "<div id='T$i' class='hidden'>N</div>";
+       $divs .= "<div id='T$i' style='display:none'>N</div>";
     }
 }
 echo $divs;
@@ -152,13 +152,13 @@ $sMsg .= "</div>";
 #Displays current phase of the game
 $sPhase = "<div id='sPhase'>";
 $sPhase .= "<b>Game State (<span id='state_num'>$state</span>)</b><br>";
-$sPhase .= ucfirst($name) . "'s Move <span id='player_color'>".$color."</span>";
+$sPhase .= ucfirst($name) . "'s Move (<span id='player_color'>".$color."</span>)";
 $sPhase .= "</div>";
 
 #Displays last move information
 $sLastMove = "<div id='sLastMove'>";
 $sLastMove .= "<b>Last Move:</b><br>";
-$sLastMove .= "By " . ucfirst($lastMoveBy) . "<br>";
+$sLastMove .= "By " . ucfirst($lastMoveBy) . " @:<br>";
 $sLastMove .= "$lastMove <br>";
 $sLastMove .= "$lastMoveTime <br>";
 $sLastMove .= "</div>";

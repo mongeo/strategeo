@@ -1,32 +1,7 @@
-var gameArray = [];
-var capture = false;
-
 /*
-* 
-* Checks if destination is a valid move for red player
-*
+* Stores location and values of all board pieces
 */
-function isPlaceable(destID){
-    if (destID.substring(0,2) == 'bS'){
-	return true;
-    }
-    var num = parseInt(destID.substring(1));
-    if (num >= 61 && num <= 100){
-	return true;
-    }
-    else {
-	return false;
-    }
-} 
-
-function isReady(){
-    for (i = 0; i < 40; i++){
-	if ($.trim($("#rS" + i).html()) != ''){
-	    return false;
-	}
-    }
-    return true;
-}
+var gameArray = [];
 
 function addBlues(){
    for (i = 61; i < 101; i++) {
@@ -35,14 +10,8 @@ function addBlues(){
     }
 }
 
-function getName(){
-    var res = $('#user_name').html();
-    return res;
-}
-
 /*
-*
-*
+* Gets state value from html id #state_num (located on sidebar)
 */
 function getState(){
     var res = $('#state_num').html();
@@ -359,7 +328,6 @@ function fight(sVal, dVal){
     var dVal = dVal.substring(1);
     //Flag - 0
     if (dVal == "0"){
-	capture = true;
 	return sCol + sVal;
     }
     //Spy - 1
@@ -411,6 +379,10 @@ function confirmOrReset(){
     //Change button to confirm
 }
 
+/*
+* Inserts values to hidden form to be used
+*  for POST to insert in database
+*/
 function toForm(sLoc,dLoc,sVal,dVal,rVal){
     var gArray = gameArray.toString();
     console.log(gArray);
@@ -422,27 +394,28 @@ function toForm(sLoc,dLoc,sVal,dVal,rVal){
     $("#gameArray").val(gArray);
 }
 
+/*
+* Updates gameArray with the confirmed move
+*  also uses toForm to set form values for POST
+*/
 function confirm(){
     var s = $('#sourceLocation').html();
     var d = $('#destLocation').html();
-    
-    var sTemp = s;
-    
+    var sTemp = s;    
     var sVal = gameArray[s];
     var dVal = gameArray[d];
     //If dest is empty
-    console.log("dVal = "+dVal);
     if (dVal == "N"){
 	gameArray[d] = sVal;
 	gameArray[s] = "N";
 	toForm(s,d,sVal,dVal,sVal);
+    //Dest is occupied by a piece
     } else {
 	var res = fight(sVal,dVal);                                                                                                                   
 	gameArray[s] = "N";
 	gameArray[d] = res;
 	toForm(s,d,sVal,dVal,res);
     }
-    console.log("confirm() s = " + s + " d " + d + " sVal " + sVal + " dVal " + dVal);    
 }
 
 $(document).ready(function(){
@@ -461,7 +434,6 @@ $(document).ready(function(){
     gameArrayInit();
     fillBoard(playerColor);    
     document.addEventListener('click', function(e) {
-
 	var pieceColor = e.target.id.substring(0,1);
 	/* Checks if clickable item */ 
 	if ($(e.target).hasClass('clickable') && isClickable(playerColor, pieceColor, i, e.target.id)){
@@ -506,7 +478,6 @@ $(document).ready(function(){
 		    $('#sMsg').html("Invalid destination"); 
                     $('#sImg').html();
 		    //Restart to get new source
-		    //i = 1;
                     sourceID = "";
 		    sourceValue = "";                                                                                                 
                     destID = "";
@@ -516,88 +487,3 @@ $(document).ready(function(){
 	}
     }, false);
 });
-/*
-	if ($(e.target).hasClass('clickable')){
-	    //Case 1: Source is empty / not a game piece 
-	    if (i == 1 && $(e.target).get(0).tagName != "IMG"){
-		$('#sMsg').html("Select a game piece"); 
-	    }
-	    //Case 2: Source is not empty / is a game piece
-	    else if (i == 1){
-		temp = e.target.id.split("l");
-		sourceID = e.target.id;
-		sourceValue = temp[0];
-		sourceParent = $(e.target).parent();//
-		$('#sMsg').html("Click a destination"); 
-		$('#sImg').html("<img src='" + $(e.target).attr("src") + "'>"); 
-		i++;
-	    }
-	    //Case 3: Destination is empty 
-	    else if (i == 2 && $(e.target).get(0).tagName != "IMG") {
-		if (isPlaceable(e.target.id)){
-		    destination = e.target.id;
-		    //Remove source
-		    var elem = document.getElementById(sourceID);
-		    elem.parentNode.removeChild(elem);
-		    //Place source
-		    //$('#' + destination).html(sourceImage); 
-		    $('#' + destination).html("<img src='../img/"+ sourceValue +".png' id='"+ sourceValue +"l"+ destination  +"' class='clickable square'>");
-
-		    //Change value of form element for post
-		    $('#F' + destination.substring(1)).val(sourceValue);
-
-		    //Remove source selection image / msg
-		    $('#sImg').html("");
-		    $("#sMsg").html("");
-
-		    //Restart to get new source
-		    i = 1;
-
-		    //Empty source and destination
-		    //source = "";
-		    destination = "";
-		    sourceImage = "";
-
-		    //Show ready button if all pieces are placed
-		    if (isReady()){
-			$('#readyButton').html("<input type='submit' value='Ready!'>"); 
-		    } else {
-			$('#readyButton').html("");
-		    }		    
-		} else {
-		    $('#sMsg').html("Invalid destination"); 
-		}
-	    }
-	}
-
-*/
-
-
-		    /*
-		    confirm = confirmMove(sourceID, destID);
-		    var elem = document.getElementById(sourceID);
-		    elem.parentNode.removeChild(elem);
-		    //Place source
-		    $('#' + destID).html("<img src='../img/"+ sourceValue +".png' id='"+ sourceValue +"l"+ destID  +"' class='clickable square'>");
-
-		    //Change value of form element for post
-		    $('#F' + destID.substring(1)).val(sourceValue);
-
-		    //Remove source selection image / msg
-		    $('#sImg').html("");
-		    $("#sMsg").html("");
-
-
-		    //Empty source and destination
-		    sourceID = "";
-		    sourceValue = "";
-		    destID = "";
-		    sourceImage = "";
-
-		    //Show ready button if all pieces are placed
-		    if (isReady()){
-			$('#readyButton').html("<input type='submit' value='Ready!'>"); 
-		    } else {
-			$('#readyButton').html("");
-		    }
-*/
