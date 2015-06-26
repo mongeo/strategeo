@@ -76,7 +76,7 @@ if (isset($_SESSION['auth'])){
   <body>
   <h1 id="welcome">Welcome to Strategeo</h1>
 
-  <form class="form-horizontal" id="login_box">
+  <form class="form-horizontal" id="login_box" method='POST' action='#'>
 	<div class="form-group">    
     	     <label for="username" class="col-sm-2 control-label">Username</label>
 	     <div class="col-sm-6">

@@ -28,6 +28,9 @@ if (isset($_GET['gid'])){
    exit();
 }
 
+$vals = "../data/vals";
+$blues = file($vals, FILE_IGNORE_NEW_LINES);
+
 require "../php_includes/db_connect.php";
 
 #
@@ -73,6 +76,25 @@ if (!mysqli_query($conn, $gameUpdate)) {
     echo "Failed to join game.<br>" . mysqli_error($conn);
 }
 
+#
+# Blue pool - Area to store blue pieces for board placement
+#
+$bP = "<table id='bPool'>";
+$i = 0;
+while($i < 40){
+        if($i % 4 == 0){
+              $bP .= "<tr>";
+        }
+        $bP .= "<td><div id='bS" . $i  . "' class='clickable square'>";
+        $bP .= "<img src='../img/B" . $blues[$i] . ".png' id='B".$blues[$i]."_".$i."' class='clickable square'>";
+        $bP .= "</div></td>";
+
+        $i++;
+        if($i % 4 == 0){
+              $bP .= "</tr>";
+        }
+}
+$bP .= "</table>";
 
 #
 # Create hidden form and append to h (f)
@@ -153,8 +175,7 @@ $htmlB .= "</html>";
 #
 # Prints entire string for the board
 #
-$bGBStr = $htmlT . $h . base64_decode($board) . $side .  $htmlB;
-echo $bGBStr;
+echo $htmlT . $h . base64_decode($board) . $bP . $side .  $htmlB;
 
 $_SESSION['gid'] = $gid;
 ?>

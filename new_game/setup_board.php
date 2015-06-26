@@ -13,11 +13,9 @@ $name = $_SESSION['auth'];
 #
 $vals = "../data/vals";
 $reds = file($vals, FILE_IGNORE_NEW_LINES);
-$blues = file($vals, FILE_IGNORE_NEW_LINES);
 
 #
 # Build board table (b)
-# M = Map (aka (b)oard)
 #
 $b = "<table id='board'>";
 $i = 1;
@@ -62,26 +60,6 @@ while($i < 40){
         }
 }
 $rP .= "</table>";
-
-#
-# Blue pool - Area to store blue pieces for board placement
-#
-$bP = "<table id='bPool'>";
-$i = 0;
-while($i < 40){
-        if($i % 4 == 0){
-              $bP .= "<tr>";
-        }
-        $bP .= "<td><div id='bS" . $i  . "' class='clickable square'>";
-        $bP .= "<img src='../img/B" . $blues[$i] . ".png' id='B".$blues[$i]."_".$i."' class='clickable square'>";
-        $bP .= "</div></td>";
-
-        $i++;
-        if($i % 4 == 0){
-              $bP .= "</tr>";
-        }
-}
-$bP .= "</table>";
 
 # 
 # Create hidden form and append to h (f)
@@ -171,5 +149,5 @@ echo $rGBStr;
 #
 # Board string - Saves randomly generated terrain 
 #
-$_SESSION['boardString'] = $b . $bP;
+$_SESSION['boardString'] = $b;
 ?>

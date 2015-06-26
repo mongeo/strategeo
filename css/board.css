@@ -194,7 +194,7 @@ button {
 }
 
 #fight_box {
-    position: absolute;
+    position: relative;
     background-color: black;
     border-radius: 15px;
     display: block;
@@ -202,11 +202,13 @@ button {
     -moz-box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);
     height: 540px;
     width: 540px;
-    left: 230px;
-    top: 0px;
     opacity: .95;
     filter:alpha(opacity=95); /* For IE8 and earlier */
     z-index: 5;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20%;
+    margin-right: auto;
 }
 
 #fight_table {

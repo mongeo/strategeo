@@ -77,7 +77,7 @@ $move = "";
 $fight = false;
 if ($dVal == "R0" || $dVal == "B0"){
    $state = 5;
-   $move = "$name captured the flag!";
+   $move = ucfirst($name) . " captured the flag!";
 } elseif ($dVal == "N"){
    $move = "$sLoc to $dLoc";
 } else {
@@ -103,10 +103,6 @@ foreach($gameArray as $value){
 }
 $post_b_str = implode(',', $b_stack);
 $post_r_str = implode(',', $r_stack);
-
-
-#var_dump($state);
-#exit();
 
 #
 # Update database new game in database
@@ -137,41 +133,40 @@ $binstmt -> bind_param('ssi', $post_b_str, $post_r_str, $gid);
 $binstmt -> execute();
 $binstmt -> close();
 
-#debug
-#print_r($_POST);
-
 # Unset gid
 $_SESSION['gid'] = '';
 unset($_SESSION['gid']);
 
-
+#
+# Displays posted move
+#
 $res = "<div id='fight_box'>";
 $res .= "<table id='fight_table'>";
-
-
-if ($fight == true && substr($sVal,1) == substr($dVal,1)) {
+if ($state == 5){
+   $res .= "<tr><td><h2>Move Results</h2></td></tr>";
+   $res .= "<tr><td align='center'><img src='../img/".$sVal.".png'></td>";
+   $res .= "<tr><td align='center'><h3>Congratulations ".ucfirst($name)."! $sVal captures the flag! You are the winner!</h3></td></tr>";
+   $res .= "<tr><td align='center'><a href='../user/welcome.php'>Home</a></td></tr>";
+} elseif ($fight == true && substr($sVal,1) == substr($dVal,1)) {
+   $res .= "<tr><td colspan='3' align='center'><h2>Move Results</h2></td></tr>";
    $res .= "<tr><td><img src='../img/".$sVal.".png'></td>";
    $res .= "<td><h3> vs. </h3></td>";
    $res .= "<td><img src='../img/".$dVal.".png'></td></tr>";
    $res .= "<tr><td colspan='3' align='center'><h3>Both pieces perish in the battle</h3></td></tr>";
    $res .= "<tr><td colspan='3' align='center'><a href='../user/welcome.php'>Home</a></td></tr>";
 } elseif ($fight == true){
+   $res .= "<tr><td colspan='3' align='center'><h2>Move Results</h2></td></tr>";
    $res .= "<tr><td><img src='../img/".$sVal.".png'></td>";
    $res .= "<td><h3> vs. </h3></td>";
    $res .= "<td><img src='../img/".$dVal.".png'></td></tr>";
    $res .= "<tr><td colspan='3' align='center'><h3>".$rVal." survives the battle</h3></td></tr>";
    $res .= "<tr><td colspan='3' align='center'><a href='../user/welcome.php'>Home</a></td></tr>";
-} elseif ($state == 4){
-   $res .= "<tr><td><h2>Move Results: </h2></td></tr>";
+} elseif ($fight == false){
+   $res .= "<tr><td><h2>Move Results</h2></td></tr>";
    $res .= "<tr><td align='center'><img src='../img/".$sVal.".png'></td>";
-   $res .= "<tr><td align='center'><h3> $sVal moved to space $sLoc </h3></td></tr>";
+   $res .= "<tr><td align='center'><h3> $sVal moved to space $sLoc</h3></td></tr>";
    $res .= "<tr><td align='center'><a href='../user/welcome.php'>Home</a></td></tr>";
-} elseif ($state == 5){
-   $res .= "<tr><td><h2>Move Results: </h2></td></tr>";
-   $res .= "<tr><td align='center'><img src='../img/".$sVal.".png'></td>";
-   $res .= "<tr><td align='center'><h3>Congratulations $name! $sVal captures the flag! You are the winner!</h3></td></tr>";
-   $res .= "<tr><td align='center'><a href='../user/welcome.php'>Home</a></td></tr>";
-}
+} 
 $res .= "</table></div>";
 
 #

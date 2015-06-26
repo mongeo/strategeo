@@ -75,17 +75,72 @@ if (isset($_SESSION['auth'])){
    $msg = "You\'ve already created an account this session.";
 }
 
-
-$f = "<form id='newuserform' method='POST' action='#'>";
-$f .= "<input type='text' name='username' placeholder='Username'>";
-$f .= "<input type='text' name='password' placeholder='Password'>";
-$f .= "<input type='text' name='password_repeat' placeholder='Repeat Password'>";
-$f .= "<button type='submit'>Create account</button>";
-$f .= "</form>";
-print $f;
-print $msg;
-echo "<br><a href='index.php'>Home</a>";
-
 }
-
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Geoffrey Montague - Home</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../css/login.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+  <h1 id="welcome">Welcome to Strategeo</h1>
+
+  <form class="form-horizontal" id="login_box" method='POST' action='#'>
+        <div class="form-group">
+             <label for="username" class="col-sm-2 control-label">Username</label>
+             <div class="col-sm-6">
+                  <input type="text" class="form-control" id="username" name='username' placeholder="Username">
+             </div>
+        </div>
+        <div class="form-group">
+             <label for="password" class="col-sm-2 control-label">Password</label>
+             <div class="col-sm-6">
+                  <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+             </div>
+        </div>
+        <div class="form-group">
+             <label for="password_repeat" class="col-sm-2 control-label">Repeat Password</label>
+             <div class="col-sm-6">
+                  <input type="password" class="form-control" id="password_repeat" name="password_repeat" placeholder="Password">
+             </div>
+        </div>
+        <div class="form-group">
+             <div class="col-sm-offset-2 col-sm-6">
+                  <button type="submit" class="btn btn-default">Create Account</button>
+             </div>
+        </div>
+	<div><?php print $msg ?><br><a href="login.php">Home</a></div>
+  </form>
+
+    <!-- Bootstrap core JavaScript                  
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="../../cover/jquery.min.js"></script>
+    <script src="../../bootstrap/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../cover/ie10-viewport-bug-workaround.js"></script>
+
+
+  </body>
+</html>
+
