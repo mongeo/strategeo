@@ -13,15 +13,15 @@ if (isset($_SESSION['auth']) == false){
    #
    # Create html table for user's current games
    #
-   $gStr = "<table><tr><th>GameID</th><th>Red</th><th>Blue</th><th>Turn</th><th>Last Move</th><th>Phase</th></tr>";
-   $gquery = "SELECT gameID, red, blue, state, lastMoveBy, lastMoveTime 
+   $gStr = "<table><tr><th>GameID</th><th>Red</th><th>Blue</th><th>Turn</th><th>Last Move</th><th>Time of Move</th><th>Phase</th></tr>";
+   $gquery = "SELECT gameID, red, blue, state, lastMove, lastMoveBy, lastMoveTime 
    	     	     FROM GAME 
 		     WHERE red='".$name."' OR blue='".$name."' 
 		     AND state > 0 AND state < 5";
    $gameN = 0;//number of total current games
    if ($gstmt = $conn->prepare($gquery)){
       $gstmt->execute();
-      $gstmt->bind_result($gid,$red,$blue,$state,$lmb,$lmt);
+      $gstmt->bind_result($gid,$red,$blue,$state,$lm, $lmb,$lmt);
       while ($gstmt->fetch()){
       	    $gameN++;
             $gStr .= "<tr><td><a href='#'>$gid</a></td>";
@@ -36,6 +36,7 @@ if (isset($_SESSION['auth']) == false){
             } else {
                $gStr .= "<td>Theirs</td>";
             }
+	    $gStr .= "<td>$lm</td>";
 	    $gStr .= "<td>$lmt</td>";
 	    $gStr .= "<td>$state</td>";
             $gStr .= "</tr>";
@@ -47,7 +48,7 @@ if (isset($_SESSION['auth']) == false){
    #
    # Create table of games that are awaiting players
    #
-   $cStr = "<table><tr><th>GameID</th><th>Player</th></tr>";
+   $cStr = "<table><tr><th>GameID</th><th>Player</th><th>Join</th></tr>";
    $cquery = "SELECT gameID, red 
    	      FROM GAME 
 	      WHERE state='1' AND red<>'".$name."' 
@@ -56,8 +57,10 @@ if (isset($_SESSION['auth']) == false){
       $cstmt->execute();
       $cstmt->bind_result($cid,$cr);
       while ($cstmt->fetch()){
-         $cStr .= "<tr><td><a href='../join_game/board_join.php?gid=$cid'>$cid</a></td>";
+         $cStr .= "<tr><td>$cid</td>";
          $cStr .= "<td>$cr</td>";
+         $cStr .= "<td><a href='../join_game/board_join.php?g\
+id=$cid'>Join Game!</a></td>";
          $cStr .= "</tr>";
       }
          $cstmt->close();
